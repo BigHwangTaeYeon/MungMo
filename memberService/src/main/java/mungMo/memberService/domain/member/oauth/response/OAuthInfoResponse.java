@@ -4,6 +4,6 @@ import mungMo.memberService.domain.member.dto.SocialRoute;
 
 public interface OAuthInfoResponse {
     String getEmail();
-    String getNickname();
+    String getGender();
     SocialRoute getOAuthProvider();
 }

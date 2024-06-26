@@ -1,55 +1,63 @@
 package mungMo.memberService.domain.member.service;
 
 import mungMo.memberService.com.config.ResponseMessage;
+import mungMo.memberService.com.exception.FileUploadException;
 import mungMo.memberService.com.exception.ValidationException;
+import mungMo.memberService.com.util.Upload;
 import mungMo.memberService.com.util.Validation;
-import mungMo.memberService.domain.member.dto.MemberDto;
+import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.member.repository.MemberRepository;
 import mungMo.memberService.domain.member.entity.MemberEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
 public class MemberApiService {
+
     private final MemberRepository memberRepository;
+
+    @Value("${api.upload.dir.review}")
+    private String uploadDir;
 
     public MemberApiService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional(readOnly = true)
     public boolean checkIfEnabledNickName(String nickname) throws ValidationException {
-        validation(nickname);
-        return Optional.ofNullable(memberRepository.findByUtteokNickname(nickname))
+        Validation.nickname(nickname);
+        return Optional.ofNullable(memberRepository.findByNickname(nickname))
                 .map(MemberEntity::getNickname)
                 .isPresent();
     }
 
     @Transactional
-    public void registNickname(MemberDto memberDto) throws ValidationException {
-        validation(memberDto.getUtteok_nickname());
+    public void registerNickname(String nickName, Long id) throws ValidationException {
 
-        if(!checkIfEnabledNickName(memberDto.getUtteok_nickname())){
-            memberRepository.findById(memberDto.getId())
-                    .ifPresent(value -> {
-                        value.changeUtteok_nickname(memberDto.getUtteok_nickname());
+        if(!checkIfEnabledNickName(nickName)){
+            memberRepository.findById(id)
+                    .ifPresent(entity -> {
+                        entity.changeNickname(nickName);
                     });
         } else {
             throw new ValidationException(ResponseMessage.valueOfCode("Conflict").getMessage());
         }
     }
 
-    public boolean userCheckNickName(Long userId) {
-        return Optional.ofNullable(memberRepository.findUtteokNicknameById(userId))
-                .map(MemberEntity::getNickname)
-                .isPresent();
-    }
-
-    private void validation(String name) throws ValidationException {
-        if(!(name).equals(Validation.Nickname(name))) {
-            throw new ValidationException(ResponseMessage.valueOfCode("Validation").getMessage());
-        }
+    @Transactional
+    public void updateDogImg(long id, MultipartFile file) {
+        Optional.of(file).ifPresent(img -> {
+                memberRepository.findById(id).ifPresent(entity -> {
+                    try {
+                        entity.fileInfoInstance(new FileInfo(new Upload(uploadDir, img).uploadImage(), "img"));
+                    } catch (FileUploadException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        });
     }
 }

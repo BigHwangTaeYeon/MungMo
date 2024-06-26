@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class MemberDto {
     private Long id;
-    private String utteok_nickname;
+    private String nickName;
 }

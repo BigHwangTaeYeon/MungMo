@@ -31,9 +31,4 @@ public class MemberController {
         return ResponseEntity.ok(oAuthLoginService.login(params));
     }
 
-    @GetMapping("test")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("test");
-    }
-
 }

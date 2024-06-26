@@ -2,7 +2,7 @@ package mungMo.memberService.com.util;
 
 import java.text.SimpleDateFormat;
 
-public class getDate {
+public class GetDate {
     public static String getCurrentTime(String timeFormat){
         return new SimpleDateFormat(timeFormat).format(System.currentTimeMillis());
     }

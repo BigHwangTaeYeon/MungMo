@@ -3,12 +3,12 @@ package mungMo.memberService.domain.member.api;
 import jakarta.servlet.http.HttpServletRequest;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.ValidationException;
-import mungMo.memberService.domain.member.dto.MemberDto;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -27,8 +27,9 @@ public class MemberApiController {
 
     /*
      * 닉네임 사용 여부 체크 - true 사용중 false 미사용
+     * websocket 으로 실시간 데이터 확인
      */
-    @GetMapping("/checkUtteokNickname")
+    @GetMapping("/checkNickname")
     public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) throws ValidationException {
         return ResponseEntity.ok(memberApiService.checkIfEnabledNickName(nickname));
     }
@@ -36,20 +37,23 @@ public class MemberApiController {
     /*
      * 닉네임 등록
      */
-    @PatchMapping("/regiUtteokNickname")
-    public ResponseEntity<?> regiNickname(@RequestBody MemberDto memberDto, HttpServletRequest request) throws ValidationException {
-        memberDto.setId(authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request)));
-        memberApiService.registNickname(memberDto);
-
+    @PatchMapping("/registerNickname")
+    public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam String nickName) throws ValidationException {
+        memberApiService.registerNickname(nickName, getId(request));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
     /*
-     * 닉네임 존재 여부 확인
+     * 강아지 사진 업로드
      */
-    @GetMapping("/isUtteokNickName")
-    public ResponseEntity<?> useCheckNickName(HttpServletRequest request){
-        return ResponseEntity.ok(memberApiService.userCheckNickName(authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request))));
+    @PatchMapping("/updateDogImg")
+    public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
+        memberApiService.updateDogImg(getId(request), file);
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
+    }
+
+    private long getId(HttpServletRequest request) {
+        return authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request));
     }
 
 }
