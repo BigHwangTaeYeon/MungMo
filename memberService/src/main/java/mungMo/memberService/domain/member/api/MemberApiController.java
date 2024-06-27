@@ -1,6 +1,7 @@
 package mungMo.memberService.domain.member.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
@@ -29,6 +30,7 @@ public class MemberApiController {
      * 닉네임 사용 여부 체크 - true 사용중 false 미사용
      * websocket 으로 실시간 데이터 확인
      */
+    @LoginCheckEssential
     @GetMapping("/checkNickname")
     public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) throws ValidationException {
         return ResponseEntity.ok(memberApiService.checkIfEnabledNickName(nickname));
@@ -37,6 +39,7 @@ public class MemberApiController {
     /*
      * 닉네임 등록
      */
+    @LoginCheckEssential
     @PatchMapping("/registerNickname")
     public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam String nickName) throws ValidationException {
         memberApiService.registerNickname(nickName, getId(request));
@@ -46,6 +49,7 @@ public class MemberApiController {
     /*
      * 강아지 사진 업로드
      */
+    @LoginCheckEssential
     @PatchMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
         memberApiService.updateDogImg(getId(request), file);

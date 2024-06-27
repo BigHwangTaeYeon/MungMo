@@ -9,13 +9,13 @@ import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.oauth.param.OAuthLoginParams;
 import mungMo.memberService.domain.member.oauth.response.OAuthInfoResponse;
 import mungMo.memberService.domain.member.repository.MemberRepository;
-import mungMo.memberService.domain.member.town.repository.TownRepository;
+import mungMo.memberService.domain.town.repository.TownRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static mungMo.memberService.domain.member.town.entity.TownEntity.firstCreateInstance;
+import static mungMo.memberService.domain.town.entity.TownEntity.firstCreateInstance;
 
 @Service
 public class MemberService {

@@ -1,8 +1,8 @@
-package mungMo.memberService.domain.member.town.service;
+package mungMo.memberService.domain.town.service;
 
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.repository.MemberRepository;
-import mungMo.memberService.domain.member.town.repository.TownRepository;
+import mungMo.memberService.domain.town.repository.TownRepository;
 import org.springframework.stereotype.Service;
 
 @Service

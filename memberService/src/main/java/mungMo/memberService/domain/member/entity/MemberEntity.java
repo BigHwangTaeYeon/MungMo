@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
+import mungMo.memberService.domain.member.dto.MemberAuthority;
 import mungMo.memberService.domain.member.dto.SocialRoute;
-import mungMo.memberService.domain.member.town.entity.TownEntity;
+import mungMo.memberService.domain.town.entity.TownEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "oauth_login")
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Column(nullable = false)
@@ -23,11 +26,15 @@ public class MemberEntity {
 
     private String nickname;
 
-    @Column(name = "manner_temperature")
+    @Column(name = "manner_temperature", nullable = false)
     private int mannerTemperature;
 
     @Column(nullable = false)
     private String gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "memberauthority")
+    private MemberAuthority memberAuthority;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "oauthprovider")
@@ -40,7 +47,8 @@ public class MemberEntity {
 
     private LocalDateTime recent_date;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "town_id")
     private TownEntity town;
 
     public void changeNickname(String nickname) {
@@ -61,8 +69,10 @@ public class MemberEntity {
     @Builder
     public MemberEntity(String email, String nickname, SocialRoute oAuthProvider) {
         create_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        this.mannerTemperature = 30;
         this.email = email;
         this.nickname = nickname;
+        this.memberAuthority = MemberAuthority.ROLE_MEMBER;
         this.oauthProvider = oAuthProvider;
     }
 }

@@ -1,11 +1,8 @@
-package mungMo.memberService.domain.member.town.entity;
+package mungMo.memberService.domain.town.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
-import mungMo.memberService.domain.embede.FileInfo;
-import mungMo.memberService.domain.member.dto.SocialRoute;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 
 import java.time.LocalDateTime;
@@ -16,18 +13,19 @@ import java.time.LocalDateTime;
 public class TownEntity {
     // memberId 참조
     @Id
+    @Column(name = "town_id")
     private Long id;
 
     private String area;
 
     @Column(nullable = false)
-    private static boolean certification;
+    private boolean certification;
 
     @Column(name = "certification_date")
-    private static LocalDateTime certificationDate;
+    private LocalDateTime certificationDate;
 
-    @JoinColumn(name = "member_id")
-    @OneToOne(mappedBy = "town")
+//    @JoinColumn(name = "member_id")
+    @OneToOne(mappedBy = "town", cascade = CascadeType.ALL)
     private MemberEntity member;
 
     public void certified(String area) {
@@ -41,8 +39,6 @@ public class TownEntity {
     }
 
     public static TownEntity firstCreateInstance(long id) {
-        certification = false;
-        certificationDate = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
         return new TownEntity(id);
     }
 
@@ -50,6 +46,8 @@ public class TownEntity {
     }
 
     public TownEntity(Long id) {
+        certification = false;
+        certificationDate = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
         this.id = id;
     }
 }

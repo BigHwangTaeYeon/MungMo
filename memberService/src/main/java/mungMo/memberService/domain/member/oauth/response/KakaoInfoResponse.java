@@ -15,7 +15,8 @@ public class KakaoInfoResponse implements OAuthInfoResponse {
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class KakaoAccount {
-        private KakaoProfile profile;
+//        private KakaoProfile profile;
+        private String gender;
         private String email;
     }
 
@@ -32,7 +33,8 @@ public class KakaoInfoResponse implements OAuthInfoResponse {
 
     @Override
     public String getGender() {
-        return kakaoAccount.profile.gender;
+        return kakaoAccount.gender;
+//        return kakaoAccount.profile.gender;
     }
 
     @Override

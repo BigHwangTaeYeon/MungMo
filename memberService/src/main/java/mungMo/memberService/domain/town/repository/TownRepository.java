@@ -1,6 +1,6 @@
-package mungMo.memberService.domain.member.town.repository;
+package mungMo.memberService.domain.town.repository;
 
-import mungMo.memberService.domain.member.town.entity.TownEntity;
+import mungMo.memberService.domain.town.entity.TownEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

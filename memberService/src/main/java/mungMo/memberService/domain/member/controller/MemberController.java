@@ -22,7 +22,7 @@ public class MemberController {
         KakaoLoginParams params = new KakaoLoginParams(code);
         return ResponseEntity.ok(oAuthLoginService.login(params));
     }
-//    https://kauth.kakao.com/oauth/authorize?client_id=8889b0f6c16199d16f1efb01ff1ec808&redirect_uri=http://localhost:8000/member-service/v1/getTokenToKakao&response_type=code
+//    https://kauth.kakao.com/oauth/authorize?client_id=1b02a8c5d5f529866e3bb44855645b62&redirect_uri=http://localhost:8000/member-service/v1/getTokenToKakao&response_type=code
 
 
     @GetMapping("/getTokenToNaver")

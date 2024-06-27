@@ -67,7 +67,8 @@ public class KakaoApiClient implements OAuthApiClient {
         httpHeaders.set("Authorization", "Bearer " + accessToken);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("property_keys", "[\"kakao_account.email\", \"kakao_account.profile\"]");
+//        body.add("property_keys", "[\"kakao_account.email\", \"kakao_account.profile\"]");
+        body.add("property_keys", "[\"kakao_account.email\", \"kakao_account.gender\"]");
 
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
