@@ -6,14 +6,17 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import mungMo.memberService.com.config.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.security.InvalidParameterException;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtUtils {
@@ -65,6 +68,17 @@ public class JwtUtils {
             System.out.println("잘못된 토큰입니다.");
         }
         return false;
+    }
+
+    public Long getIdFromRequest(HttpServletRequest request) {
+        return Optional.of(request.getHeader(AUTHORIZATION_HEADER))
+                .map(token ->
+                    Long.valueOf(Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token.substring(7)).getBody().getSubject())
+                )
+                .orElseThrow(InvalidParameterException::new);
+//                .ifPresent(token -> {
+//                    Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
+//                });
     }
 
     // 토큰에서 member_id를 추출하여 반환하는 메소드

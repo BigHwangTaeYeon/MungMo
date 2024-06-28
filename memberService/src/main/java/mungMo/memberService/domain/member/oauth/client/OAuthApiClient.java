@@ -1,6 +1,6 @@
 package mungMo.memberService.domain.member.oauth.client;
 
-import mungMo.memberService.domain.member.dto.SocialRoute;
+import mungMo.memberService.domain.member.entity.SocialRoute;
 import mungMo.memberService.domain.member.oauth.param.OAuthLoginParams;
 import mungMo.memberService.domain.member.oauth.response.OAuthInfoResponse;
 

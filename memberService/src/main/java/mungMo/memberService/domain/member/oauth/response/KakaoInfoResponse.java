@@ -3,7 +3,7 @@ package mungMo.memberService.domain.member.oauth.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import mungMo.memberService.domain.member.dto.SocialRoute;
+import mungMo.memberService.domain.member.entity.SocialRoute;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)

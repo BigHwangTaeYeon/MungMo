@@ -2,7 +2,7 @@ package mungMo.memberService.domain.member.oauth.param;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mungMo.memberService.domain.member.dto.SocialRoute;
+import mungMo.memberService.domain.member.entity.SocialRoute;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 

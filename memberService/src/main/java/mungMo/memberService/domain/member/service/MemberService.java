@@ -9,6 +9,9 @@ import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.oauth.param.OAuthLoginParams;
 import mungMo.memberService.domain.member.oauth.response.OAuthInfoResponse;
 import mungMo.memberService.domain.member.repository.MemberRepository;
+import mungMo.memberService.domain.member.repository.MemberTypeRepository;
+import mungMo.memberService.domain.otherService.publicCode.entity.PublicCodeEntity;
+import mungMo.memberService.domain.otherService.publicCode.repository.PublicCodeRepository;
 import mungMo.memberService.domain.town.repository.TownRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +24,16 @@ import static mungMo.memberService.domain.town.entity.TownEntity.firstCreateInst
 public class MemberService {
     private final MemberRepository memberRepository;
     private final TownRepository townRepository;
+    private final MemberTypeRepository memberTypeRepository;
+    private final PublicCodeRepository publicCodeRepository;
     private final AuthTokensGenerator authTokensGenerator;
     private final RequestOAuthInfoService requestOAuthInfoService;
 
-    public MemberService(MemberRepository memberRepository, TownRepository townRepository,
-                         AuthTokensGenerator authTokensGenerator, RequestOAuthInfoService requestOAuthInfoService) {
+    public MemberService(MemberRepository memberRepository, TownRepository townRepository, MemberTypeRepository memberTypeRepository, PublicCodeRepository publicCodeRepository, AuthTokensGenerator authTokensGenerator, RequestOAuthInfoService requestOAuthInfoService) {
         this.memberRepository = memberRepository;
         this.townRepository = townRepository;
+        this.memberTypeRepository = memberTypeRepository;
+        this.publicCodeRepository = publicCodeRepository;
         this.authTokensGenerator = authTokensGenerator;
         this.requestOAuthInfoService = requestOAuthInfoService;
     }
@@ -69,6 +75,14 @@ public class MemberService {
                 .build();
         memberRepository.save(member);
         townRepository.save(firstCreateInstance(member.getId()));
+
+        for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("MBTP", true)) {
+            memberTypeRepository.save(PCEntity.changeToMemberType(member));
+        }
+        for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("DGTP", true)) {
+            memberTypeRepository.save(PCEntity.changeToMemberType(member));
+        }
+
         return memberRepository.findByEmail(member.getEmail()).getId();
     }
 

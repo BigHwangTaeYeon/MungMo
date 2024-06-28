@@ -2,10 +2,12 @@ package mungMo.memberService.domain.member.service;
 
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.FileUploadException;
+import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.com.util.Upload;
 import mungMo.memberService.com.util.Validation;
 import mungMo.memberService.domain.embede.FileInfo;
+import mungMo.memberService.domain.member.dto.MemberDTO;
 import mungMo.memberService.domain.member.repository.MemberRepository;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +22,18 @@ public class MemberApiService {
 
     private final MemberRepository memberRepository;
 
-    @Value("${api.upload.dir.review}")
+    @Value("${api.upload.dir.dog}")
     private String uploadDir;
 
     public MemberApiService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDTO infoById(Long id) throws PreconditionFailedException {
+        return memberRepository.findById(id)
+                .map(MemberEntity::changeToDTO)
+                .orElseThrow(() -> new PreconditionFailedException(ResponseMessage.PRECONDITIONFAILED.getMessage()));
     }
 
     @Transactional(readOnly = true)

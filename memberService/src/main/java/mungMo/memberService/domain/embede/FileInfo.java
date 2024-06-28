@@ -14,6 +14,13 @@ public class FileInfo {
     private final String file_path;
     private final String file_type;
 
+    public FileInfo(String original, String mask, String path, String type) {
+        original_name = original;
+        mask_name = mask;
+        file_path = path;
+        file_type = type;
+    }
+
     public FileInfo(Map<String, String> uploadFileInfo, String file_type) {
         this.original_name = uploadFileInfo.get("original");
         this.mask_name = uploadFileInfo.get("masking");

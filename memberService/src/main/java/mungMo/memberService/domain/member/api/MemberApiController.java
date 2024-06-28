@@ -3,6 +3,7 @@ package mungMo.memberService.domain.member.api;
 import jakarta.servlet.http.HttpServletRequest;
 import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
+import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
@@ -24,6 +25,28 @@ public class MemberApiController {
         this.memberApiService = memberApiService;
         this.authTokensGenerator = authTokensGenerator;
         this.jwtProvider = jwtProvider;
+    }
+
+    /*
+     * 토큰으로 정보 가져오기
+     */
+    @LoginCheckEssential
+    @GetMapping("/memberInfo")
+    public ResponseEntity<?> myInfo(HttpServletRequest request) throws PreconditionFailedException {
+        return ResponseEntity.ok(
+                new Result<>(memberApiService.infoById(getId(request)))
+        );
+    }
+
+    /*
+     * id로 정보 가져오기
+     */
+    @LoginCheckEssential
+    @GetMapping("/memberInfo/{id}")
+    public ResponseEntity<?> yourInfo(@PathVariable("id") Long id) throws PreconditionFailedException {
+        return ResponseEntity.ok(
+                new Result<>(memberApiService.infoById(id))
+        );
     }
 
     /*
@@ -58,6 +81,13 @@ public class MemberApiController {
 
     private long getId(HttpServletRequest request) {
         return authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request));
+    }
+
+    public static class Result<T> {
+        private final T data;
+        public Result(T data) {
+            this.data = data;
+        }
     }
 
 }

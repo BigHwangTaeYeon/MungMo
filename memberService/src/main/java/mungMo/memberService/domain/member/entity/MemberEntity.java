@@ -5,12 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
-import mungMo.memberService.domain.member.dto.MemberAuthority;
-import mungMo.memberService.domain.member.dto.SocialRoute;
+import mungMo.memberService.domain.member.dto.MemberDTO;
 import mungMo.memberService.domain.town.entity.TownEntity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "oauth_login")
@@ -74,5 +72,19 @@ public class MemberEntity {
         this.nickname = nickname;
         this.memberAuthority = MemberAuthority.ROLE_MEMBER;
         this.oauthProvider = oAuthProvider;
+    }
+
+    public MemberDTO changeToDTO() {
+        return MemberDTO.builder()
+                .memberId(id)
+                .email(email)
+                .nickName(nickname)
+                .gender(gender)
+                .mannerTemperature(mannerTemperature)
+                .townCertificated(town.isCertification())
+                .original_name(fileInfo.getOriginal_name())
+                .mask_name(fileInfo.getMask_name())
+                .file_path(fileInfo.getFile_path())
+                .build();
     }
 }

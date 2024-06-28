@@ -238,7 +238,7 @@ topic 삭제를 하여면 먼저 생성한 connector 부터 삭제해야한다.
 트러블 슈팅
 
 rest api vs kafka cdc 
-데이터 정합성
+데이터 정합
 
 
 

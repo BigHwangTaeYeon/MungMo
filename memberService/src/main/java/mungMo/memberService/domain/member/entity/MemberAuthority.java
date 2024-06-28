@@ -1,4 +1,4 @@
-package mungMo.memberService.domain.member.dto;
+package mungMo.memberService.domain.member.entity;
 
 public enum MemberAuthority {
     // 추후, 회원가입 인증 절차 시작 시 인증 완료 전 게스트, 후 멤버
