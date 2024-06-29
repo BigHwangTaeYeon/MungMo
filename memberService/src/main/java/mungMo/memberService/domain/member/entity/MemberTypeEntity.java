@@ -41,7 +41,7 @@ public class MemberTypeEntity {
         this.code = code;
         this.use = false;
         this.member = member;
-        this.update_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        this.update_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
     }
 
     public MemberTypeDTO changeToDTO() {

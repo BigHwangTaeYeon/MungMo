@@ -53,7 +53,7 @@ public class Upload {
 
     private Map<String, String> dir() {
         Map<String, String> dir = new HashMap<>();
-        String makeDir = uploadDir + GetDate.getCurrentTime("YYYYMMDD") + File.separator;
+        String makeDir = uploadDir + System.currentTimeMillis() + File.separator;
 //         uploadDir을 사용하면 static처럼 뒤에 계속 날짜가 붙는다.
         dir.put("makeDir", makeDir);
 
@@ -64,6 +64,6 @@ public class Upload {
 
     private String maskingFileName() {
         // 파일명 난수화 + 확장자
-        return UUID.randomUUID().toString().substring(0, 5) + GetDate.getCurrentTime("HHmmss");
+        return UUID.randomUUID().toString().substring(0, 5) + System.currentTimeMillis();
     }
 }

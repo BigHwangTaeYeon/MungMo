@@ -14,7 +14,7 @@ public class Validation {
     public static String nicknameConfirm(String name){
         String nickName = name.replaceAll("[^ㄱ-ㅎ|가-힣]", "");
         if(nickName.isEmpty()) {
-            return "utteok" + GetDate.getCurrentTime("YYYYMMDDHHmmss");
+            return "utteok" + System.currentTimeMillis();
         }
         else {
             return nickName;

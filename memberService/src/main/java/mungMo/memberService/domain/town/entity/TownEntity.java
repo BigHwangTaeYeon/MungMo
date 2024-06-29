@@ -31,7 +31,7 @@ public class TownEntity {
     public void certified(String area) {
         this.area = area;
         certification = true;
-        certificationDate = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        certificationDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
     }
 
     public void expired() {
@@ -47,7 +47,9 @@ public class TownEntity {
 
     public TownEntity(Long id) {
         certification = false;
-        certificationDate = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        LocalDateTime date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        System.out.println("TownEntity date = " + date);
+        certificationDate = date;
         this.id = id;
     }
 }

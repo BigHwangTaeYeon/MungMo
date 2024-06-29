@@ -65,7 +65,7 @@ public class MemberEntity {
     }
 
     public void updateRecentDate() {
-        recent_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        recent_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
     }
 
     public void fileInfoInstance(FileInfo info) {
@@ -77,7 +77,7 @@ public class MemberEntity {
 
     @Builder
     public MemberEntity(String email, String gender, String ageRange, SocialRoute oAuthProvider) {
-        create_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
         this.mannerTemperature = 30;
         this.email = email;
         this.gender = gender;

@@ -40,7 +40,7 @@ public class ReportEntity {
         fromMemberId = dto.getFromId();
         toMemberId = dto.getToId();
         status = false;
-        create_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
+        create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
         if(!dto.getFile_path().isEmpty()) {
             fileInfo = new FileInfo(dto.getOriginal_name(), dto.getMask_name(), dto.getFile_path(), dto.getFile_type());
         }
