@@ -17,6 +17,7 @@ public class NaverInfoResponse implements OAuthInfoResponse {
     static class Response {
         private String email;
         private String gender;
+        private String ageRange;
     }
 
     @Override
@@ -27,6 +28,11 @@ public class NaverInfoResponse implements OAuthInfoResponse {
     @Override
     public String getGender() {
         return response.gender;
+    }
+
+    @Override
+    public String getAgeRange() {
+        return response.ageRange;
     }
 
     @Override

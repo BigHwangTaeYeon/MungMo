@@ -4,9 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.PreconditionFailedException;
+import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
-import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
-import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
+import mungMo.memberService.com.util.JwtUtils;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = {"http://118.67.132.171", "http://101.101.209.59", "http://dev.utteok.com/", "http://www.utteok.com/", "http://localhost:3000"}, allowCredentials = "true")
 public class MemberApiController {
     private final MemberApiService memberApiService;
-    private final AuthTokensGenerator authTokensGenerator;
-    private final JwtTokenProvider jwtProvider;
+    private final JwtUtils jwtUtils;
 
-    public MemberApiController(MemberApiService memberApiService, AuthTokensGenerator authTokensGenerator, JwtTokenProvider jwtProvider) {
+    public MemberApiController(MemberApiService memberApiService, JwtUtils jwtUtils) {
         this.memberApiService = memberApiService;
-        this.authTokensGenerator = authTokensGenerator;
-        this.jwtProvider = jwtProvider;
+        this.jwtUtils = jwtUtils;
     }
 
     /*
@@ -34,7 +32,7 @@ public class MemberApiController {
     @GetMapping("/memberInfo")
     public ResponseEntity<?> myInfo(HttpServletRequest request) throws PreconditionFailedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.infoById(getId(request)))
+                new Result<>(memberApiService.infoById(jwtUtils.getIdFromRequest(request)))
         );
     }
 
@@ -49,14 +47,31 @@ public class MemberApiController {
         );
     }
 
-    /*
-     * 닉네임 사용 여부 체크 - true 사용중 false 미사용
-     * websocket 으로 실시간 데이터 확인
+    /**
+     *
+     * @param request
+     * @return dogName, id
+     * @throws UnauthorizedException
      */
     @LoginCheckEssential
-    @GetMapping("/checkNickname")
-    public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) throws ValidationException {
-        return ResponseEntity.ok(memberApiService.checkIfEnabledNickName(nickname));
+    @GetMapping("/dogName")
+    public ResponseEntity<?> dogName(HttpServletRequest request) throws UnauthorizedException {
+        return ResponseEntity.ok(
+                new Result<>(memberApiService.dogName(jwtUtils.getIdFromRequest(request)))
+        );
+    }
+
+    /**
+     * 강아지 정보 - 좋아요 등록
+     * @param request
+     * @param like
+     * @return
+     */
+    @LoginCheckEssential
+    @PostMapping("/dogLike")
+    public ResponseEntity<?> dogLike(HttpServletRequest request, String like) {
+        memberApiService.dogLike(jwtUtils.getIdFromRequest(request), like);
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
     /*
@@ -65,7 +80,7 @@ public class MemberApiController {
     @LoginCheckEssential
     @PatchMapping("/registerNickname")
     public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam String nickName) throws ValidationException {
-        memberApiService.registerNickname(nickName, getId(request));
+        memberApiService.registerNickname(nickName, jwtUtils.getIdFromRequest(request));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
@@ -75,12 +90,8 @@ public class MemberApiController {
     @LoginCheckEssential
     @PatchMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
-        memberApiService.updateDogImg(getId(request), file);
+        memberApiService.updateDogImg(jwtUtils.getIdFromRequest(request), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
-    }
-
-    private long getId(HttpServletRequest request) {
-        return authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request));
     }
 
     public static class Result<T> {

@@ -1,7 +1,6 @@
 package mungMo.memberService.domain.member.service;
 
 import mungMo.memberService.com.exception.ValidationException;
-import mungMo.memberService.com.util.Validation;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.oauth.client.RequestOAuthInfoService;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokens;
@@ -38,6 +37,7 @@ public class MemberService {
         this.requestOAuthInfoService = requestOAuthInfoService;
     }
 
+    @Transactional
     public AuthTokens login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
         Long memberId = findOrCreateMember(oAuthInfoResponse);
@@ -66,11 +66,12 @@ public class MemberService {
                         });
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     private Long newMember(OAuthInfoResponse oAuthInfoResponse) throws ValidationException {
         MemberEntity member = MemberEntity.builder()
                 .email(oAuthInfoResponse.getEmail())
-                .nickname(Validation.nicknameConfirm(oAuthInfoResponse.getGender()))
+                .gender(oAuthInfoResponse.getGender())
+                .ageRange(oAuthInfoResponse.getAgeRange())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
                 .build();
         memberRepository.save(member);

@@ -3,6 +3,7 @@ package mungMo.memberService.domain.otherService.publicCode.entity;
 import jakarta.persistence.*;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.entity.MemberTypeEntity;
+import mungMo.memberService.domain.otherService.publicCode.dto.PublicCodeDTO;
 
 @Entity
 @Table(name = "public_code")
@@ -21,6 +22,14 @@ public class PublicCodeEntity {
 
     @Column(name = "use_yn")
     private boolean useYN;
+
+    public PublicCodeDTO changeToDTO() {
+        return PublicCodeDTO.builder()
+                .codeType(codeType)
+                .code(code)
+                .codeName(codeName)
+                .build();
+    }
 
     public MemberTypeEntity changeToMemberType(MemberEntity member) {
         return new MemberTypeEntity(codeType, code, member);

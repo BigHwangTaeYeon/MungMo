@@ -6,6 +6,7 @@ import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.member.dto.MemberDTO;
+import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.town.entity.TownEntity;
 
 import java.time.LocalDateTime;
@@ -22,13 +23,19 @@ public class MemberEntity {
     @Column(nullable = false)
     private String email;
 
-    private String nickname;
+    @Column(name = "dog_name")
+    private String dogName;
+
+    @Column(name = "like_for_dog")
+    private String dogLike;
 
     @Column(name = "manner_temperature", nullable = false)
     private int mannerTemperature;
 
     @Column(nullable = false)
     private String gender;
+    @Column(name = "age_range", nullable = false)
+    private String ageRange;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "memberauthority")
@@ -49,8 +56,12 @@ public class MemberEntity {
     @JoinColumn(name = "town_id")
     private TownEntity town;
 
-    public void changeNickname(String nickname) {
-        this.nickname = nickname;
+    public void changeDogName(String dogName) {
+        this.dogName = dogName;
+    }
+
+    public void changeDogLike(String dogLike) {
+        this.dogLike = dogLike;
     }
 
     public void updateRecentDate() {
@@ -65,21 +76,31 @@ public class MemberEntity {
     }
 
     @Builder
-    public MemberEntity(String email, String nickname, SocialRoute oAuthProvider) {
+    public MemberEntity(String email, String gender, String ageRange, SocialRoute oAuthProvider) {
         create_date = LocalDateTime.parse(GetDate.getCurrentTime("YYYYMMDDHHmmss"));
         this.mannerTemperature = 30;
         this.email = email;
-        this.nickname = nickname;
+        this.gender = gender;
+        this.ageRange = ageRange;
         this.memberAuthority = MemberAuthority.ROLE_MEMBER;
         this.oauthProvider = oAuthProvider;
+    }
+
+    public MemberIdAndDogNameDTO changeToDogDTO() {
+        return MemberIdAndDogNameDTO.builder()
+                .id(id)
+                .dogName(dogName)
+                .build();
     }
 
     public MemberDTO changeToDTO() {
         return MemberDTO.builder()
                 .memberId(id)
                 .email(email)
-                .nickName(nickname)
+                .dogName(dogName)
+                .dogLike(dogLike)
                 .gender(gender)
+                .ageRange(ageRange)
                 .mannerTemperature(mannerTemperature)
                 .townCertificated(town.isCertification())
                 .original_name(fileInfo.getOriginal_name())

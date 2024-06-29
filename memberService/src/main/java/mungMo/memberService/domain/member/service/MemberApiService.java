@@ -3,11 +3,12 @@ package mungMo.memberService.domain.member.service;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.FileUploadException;
 import mungMo.memberService.com.exception.PreconditionFailedException;
+import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.com.util.Upload;
-import mungMo.memberService.com.util.Validation;
 import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.member.dto.MemberDTO;
+import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.member.repository.MemberRepository;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,25 +37,9 @@ public class MemberApiService {
                 .orElseThrow(() -> new PreconditionFailedException(ResponseMessage.PRECONDITIONFAILED.getMessage()));
     }
 
-    @Transactional(readOnly = true)
-    public boolean checkIfEnabledNickName(String nickname) throws ValidationException {
-        Validation.nickname(nickname);
-        return Optional.ofNullable(memberRepository.findByNickname(nickname))
-                .map(MemberEntity::getNickname)
-                .isPresent();
-    }
-
     @Transactional
-    public void registerNickname(String nickName, Long id) throws ValidationException {
-
-        if(!checkIfEnabledNickName(nickName)){
-            memberRepository.findById(id)
-                    .ifPresent(entity -> {
-                        entity.changeNickname(nickName);
-                    });
-        } else {
-            throw new ValidationException(ResponseMessage.valueOfCode("Conflict").getMessage());
-        }
+    public void registerNickname(String dogName, Long id) throws ValidationException {
+        memberRepository.findById(id).ifPresent(entity -> entity.changeDogName(dogName));
     }
 
     @Transactional
@@ -68,5 +53,13 @@ public class MemberApiService {
                     }
                 });
         });
+    }
+
+    public MemberIdAndDogNameDTO dogName(long id) throws UnauthorizedException {
+        return memberRepository.findById(id).map(MemberEntity::changeToDogDTO).orElseThrow(()->new UnauthorizedException("token error"));
+    }
+
+    public void dogLike(Long id, String like) {
+        memberRepository.findById(id).ifPresent(entity -> entity.changeDogLike(like));
     }
 }
