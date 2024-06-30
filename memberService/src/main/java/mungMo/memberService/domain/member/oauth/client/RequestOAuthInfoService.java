@@ -3,8 +3,10 @@ package mungMo.memberService.domain.member.oauth.client;
 import mungMo.memberService.domain.member.entity.SocialRoute;
 import mungMo.memberService.domain.member.oauth.param.OAuthLoginParams;
 import mungMo.memberService.domain.member.oauth.response.OAuthInfoResponse;
+import net.minidev.json.parser.ParseException;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,7 +22,7 @@ public class RequestOAuthInfoService {
         );
     }
 
-    public OAuthInfoResponse request(OAuthLoginParams params) {
+    public OAuthInfoResponse request(OAuthLoginParams params) throws IOException, ParseException {
         OAuthApiClient client = clients.get(params.oAuthProvider());
         String accessToken = client.requestAccessToken(params);
         return client.requestOauthInfo(accessToken);

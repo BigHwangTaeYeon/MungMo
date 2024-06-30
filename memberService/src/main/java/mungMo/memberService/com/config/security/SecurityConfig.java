@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(Collections.singletonList("*")); // http://localhost:3000와 같이 주소로 허용가능
                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
+                        configuration.setAllowCredentials(false);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 

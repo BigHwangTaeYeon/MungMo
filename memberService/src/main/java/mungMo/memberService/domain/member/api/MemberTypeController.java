@@ -15,13 +15,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/v1")
-@CrossOrigin(origins = {"http://118.67.132.171", "http://101.101.209.59", "http://dev.utteok.com/", "http://www.utteok.com/", "http://localhost:3000"}, allowCredentials = "true")
 public class MemberTypeController {
-    private final JwtUtils jwtUtils;
+    private final AuthTokensGenerator authTokensGenerator;
     private final MemberTypeService memberTypeService;
 
-    public MemberTypeController(JwtUtils jwtUtils, MemberTypeService memberTypeService) {
-        this.jwtUtils = jwtUtils;
+    public MemberTypeController(AuthTokensGenerator authTokensGenerator, MemberTypeService memberTypeService) {
+        this.authTokensGenerator = authTokensGenerator;
         this.memberTypeService = memberTypeService;
     }
 
@@ -34,7 +33,7 @@ public class MemberTypeController {
     @PatchMapping("/userTypeList")
     public ResponseEntity<?> userTypeList(HttpServletRequest request) {
         return ResponseEntity.ok(
-                new Result<>(memberTypeService.userTypeList(jwtUtils.getIdFromRequest(request)))
+                new Result<>(memberTypeService.userTypeList(authTokensGenerator.extractMemberIdToHeader(request)))
         );
     }
 
@@ -47,7 +46,7 @@ public class MemberTypeController {
     @LoginCheckEssential
     @PatchMapping("/userTypeResister")
     public ResponseEntity<?> userTypeResister(HttpServletRequest request, @RequestParam List<Integer> code) {
-        memberTypeService.userTypeResister(jwtUtils.getIdFromRequest(request), code);
+        memberTypeService.userTypeResister(authTokensGenerator.extractMemberIdToHeader(request), code);
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 
@@ -60,7 +59,7 @@ public class MemberTypeController {
     @LoginCheckEssential
     @PatchMapping("/dogTypeResister")
     public ResponseEntity<?> dogTypeResister(HttpServletRequest request, @RequestParam List<Integer> code) {
-        memberTypeService.dogTypeResister(jwtUtils.getIdFromRequest(request), code);
+        memberTypeService.dogTypeResister(authTokensGenerator.extractMemberIdToHeader(request), code);
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 

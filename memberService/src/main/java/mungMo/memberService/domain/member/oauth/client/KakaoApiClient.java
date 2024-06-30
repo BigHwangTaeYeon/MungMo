@@ -5,6 +5,9 @@ import mungMo.memberService.domain.member.oauth.param.OAuthLoginParams;
 import mungMo.memberService.domain.member.oauth.response.KakaoInfoResponse;
 import mungMo.memberService.domain.member.oauth.response.OAuthInfoResponse;
 import mungMo.memberService.domain.member.oauth.token.KakaoTokens;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Component
 public class KakaoApiClient implements OAuthApiClient {
@@ -59,7 +69,7 @@ public class KakaoApiClient implements OAuthApiClient {
     }
 
     @Override
-    public OAuthInfoResponse requestOauthInfo(String accessToken) {
+    public OAuthInfoResponse requestOauthInfo(String accessToken) throws IOException, ParseException {
         String url = apiUrl + "/v2/user/me";
 
         HttpHeaders httpHeaders = new HttpHeaders();

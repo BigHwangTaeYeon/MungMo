@@ -70,17 +70,6 @@ public class JwtUtils {
         return false;
     }
 
-    public Long getIdFromRequest(HttpServletRequest request) {
-        return Optional.of(request.getHeader(AUTHORIZATION_HEADER))
-                .map(token ->
-                    Long.valueOf(Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token.substring(7)).getBody().getSubject())
-                )
-                .orElseThrow(InvalidParameterException::new);
-//                .ifPresent(token -> {
-//                    Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
-//                });
-    }
-
     // 토큰에서 member_id를 추출하여 반환하는 메소드
     public String getId(String token){
         System.out.println("getId");

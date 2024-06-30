@@ -8,12 +8,13 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Slf4j
 @EnableScheduling
-@EnableSchedulerLock(defaultLockAtMostFor = "PT57SS")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT57S")
 @Component
 public class TownScheduledTask {
     private final TownRepository townRepository;
@@ -28,6 +29,7 @@ public class TownScheduledTask {
             lockAtLeastFor = "PT55S",
             lockAtMostFor = "PT55S"
     )
+    @Transactional
     public void scheduler1() {
         System.out.println(GetDate.pareLocalDataTime("yyyyMMddHHmmss"));
         log.info("1번 스케줄러");

@@ -1,5 +1,6 @@
 package mungMo.memberService.domain.member.oauth.jwt;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -26,6 +27,10 @@ public class AuthTokensGenerator {
         String refreshToken = jwtTokenProvider.generate(subject, refreshTokenExpiredAt);
 
         return AuthTokens.of(accessToken, refreshToken, BEARER_TYPE, ACCESS_TOKEN_EXPIRE_TIME / 1000L);
+    }
+
+    public Long extractMemberIdToHeader(HttpServletRequest request) {
+        return Long.valueOf(jwtTokenProvider.extractSubject(request.getHeader("Authorization").substring(7)));
     }
 
     public Long extractMemberId(String accessToken) {

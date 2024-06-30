@@ -12,9 +12,11 @@ import mungMo.memberService.domain.member.repository.MemberTypeRepository;
 import mungMo.memberService.domain.otherService.publicCode.entity.PublicCodeEntity;
 import mungMo.memberService.domain.otherService.publicCode.repository.PublicCodeRepository;
 import mungMo.memberService.domain.town.repository.TownRepository;
+import net.minidev.json.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static mungMo.memberService.domain.town.entity.TownEntity.firstCreateInstance;
@@ -38,7 +40,7 @@ public class MemberService {
     }
 
     @Transactional
-    public AuthTokens login(OAuthLoginParams params) {
+    public AuthTokens login(OAuthLoginParams params) throws IOException, ParseException {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
         Long memberId = findOrCreateMember(oAuthInfoResponse);
 

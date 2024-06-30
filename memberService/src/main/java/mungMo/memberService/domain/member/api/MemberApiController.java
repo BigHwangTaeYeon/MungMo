@@ -7,6 +7,8 @@ import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.com.util.JwtUtils;
+import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
+import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/v1")
-@CrossOrigin(origins = {"http://118.67.132.171", "http://101.101.209.59", "http://dev.utteok.com/", "http://www.utteok.com/", "http://localhost:3000"}, allowCredentials = "true")
 public class MemberApiController {
     private final MemberApiService memberApiService;
-    private final JwtUtils jwtUtils;
+    private final AuthTokensGenerator authTokensGenerator;
 
-    public MemberApiController(MemberApiService memberApiService, JwtUtils jwtUtils) {
+    public MemberApiController(MemberApiService memberApiService, AuthTokensGenerator authTokensGenerator) {
         this.memberApiService = memberApiService;
-        this.jwtUtils = jwtUtils;
+        this.authTokensGenerator = authTokensGenerator;
     }
 
     /*
@@ -32,7 +33,7 @@ public class MemberApiController {
     @GetMapping("/memberInfo")
     public ResponseEntity<?> myInfo(HttpServletRequest request) throws PreconditionFailedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.infoById(jwtUtils.getIdFromRequest(request)))
+                new Result<>(memberApiService.infoById(authTokensGenerator.extractMemberIdToHeader(request)))
         );
     }
 
@@ -57,7 +58,7 @@ public class MemberApiController {
     @GetMapping("/dogName")
     public ResponseEntity<?> dogName(HttpServletRequest request) throws UnauthorizedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.dogName(jwtUtils.getIdFromRequest(request)))
+                new Result<>(memberApiService.dogName(authTokensGenerator.extractMemberIdToHeader(request)))
         );
     }
 
@@ -70,7 +71,7 @@ public class MemberApiController {
     @LoginCheckEssential
     @PostMapping("/dogLike")
     public ResponseEntity<?> dogLike(HttpServletRequest request, String like) {
-        memberApiService.dogLike(jwtUtils.getIdFromRequest(request), like);
+        memberApiService.dogLike(authTokensGenerator.extractMemberIdToHeader(request), like);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
@@ -79,8 +80,8 @@ public class MemberApiController {
      */
     @LoginCheckEssential
     @PatchMapping("/registerNickname")
-    public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam String nickName) throws ValidationException {
-        memberApiService.registerNickname(nickName, jwtUtils.getIdFromRequest(request));
+    public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam("nickName") String nickName) throws ValidationException {
+        memberApiService.registerNickname(nickName, authTokensGenerator.extractMemberIdToHeader(request));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
@@ -90,7 +91,7 @@ public class MemberApiController {
     @LoginCheckEssential
     @PatchMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
-        memberApiService.updateDogImg(jwtUtils.getIdFromRequest(request), file);
+        memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
