@@ -47,14 +47,16 @@ public class ReportService {
             try {
                 reportRepository.save(
                         new ReportEntity(
-                                reportDTO.saveFile(new FileInfo(new Upload(uploadDir, img).uploadImage(), "img"))
+                                new FileInfo(new Upload(uploadDir, img).uploadImage(), "img")
+                                , reportDTO
                         )
                 );
             } catch (FileUploadException e) {
                 throw new RuntimeException(e);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         });
-        reportRepository.save(new ReportEntity(reportDTO));
     }
 
 }

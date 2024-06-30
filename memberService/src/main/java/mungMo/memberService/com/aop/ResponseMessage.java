@@ -30,34 +30,42 @@ public class ResponseMessage {
             return ResponseEntity.ok(proceed);
         }
         catch(FileUploadException | NullPointerException | IllegalArgumentException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 400 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("InvalidParams").getMessage());
         }
         catch(UnauthorizedException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 401 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("Unauthorized").getMessage());
         }
         catch(UnavailableException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 401 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("Unavailable").getMessage());
         }
         catch(ForbiddenException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 403 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("Forbidden").getMessage());
         }
         catch(ValidationException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 403 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("Validation").getMessage());
         }
         catch(NotFoundException e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 404 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("NotFound").getMessage());
         }
         catch(HttpClientErrorException.Conflict e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 409 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("Conflict").getMessage());
         }
         catch(Exception e){
+            System.out.println("exception : " + e.getMessage());
             // 그 외 에러의 경우 500 메세지
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mungMo.memberService.com.config.ResponseMessage.valueOfCode("InternalServerError").getMessage());
         }

@@ -11,5 +11,5 @@ import java.net.MalformedURLException;
 public interface OAuthApiClient {
     SocialRoute oAuthProvider();
     String requestAccessToken(OAuthLoginParams params);
-    OAuthInfoResponse requestOauthInfo(String accessToken) throws IOException, ParseException;
+    OAuthInfoResponse requestOauthInfo(String accessToken);
 }

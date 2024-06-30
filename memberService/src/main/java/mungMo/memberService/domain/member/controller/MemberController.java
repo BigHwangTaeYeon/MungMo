@@ -25,8 +25,6 @@ public class MemberController {
         KakaoLoginParams params = new KakaoLoginParams(code);
         return ResponseEntity.ok(oAuthLoginService.login(params));
     }
-//    https://kauth.kakao.com/oauth/authorize?client_id=1b02a8c5d5f529866e3bb44855645b62&redirect_uri=http://localhost:8000/member-service/v1/getTokenToKakao&response_type=code
-
 
     @GetMapping("/getTokenToNaver")
     public ResponseEntity<AuthTokens> loginNaver(@RequestParam(value = "code", required = false) String code) throws IOException, ParseException {

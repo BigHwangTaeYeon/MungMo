@@ -11,15 +11,12 @@ import mungMo.memberService.domain.member.repository.MemberRepository;
 import mungMo.memberService.domain.member.repository.MemberTypeRepository;
 import mungMo.memberService.domain.otherService.publicCode.entity.PublicCodeEntity;
 import mungMo.memberService.domain.otherService.publicCode.repository.PublicCodeRepository;
+import mungMo.memberService.domain.town.entity.TownEntity;
 import mungMo.memberService.domain.town.repository.TownRepository;
-import net.minidev.json.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Optional;
-
-import static mungMo.memberService.domain.town.entity.TownEntity.firstCreateInstance;
 
 @Service
 public class MemberService {
@@ -40,7 +37,7 @@ public class MemberService {
     }
 
     @Transactional
-    public AuthTokens login(OAuthLoginParams params) throws IOException, ParseException {
+    public AuthTokens login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
         Long memberId = findOrCreateMember(oAuthInfoResponse);
 
@@ -70,14 +67,17 @@ public class MemberService {
 
     @Transactional
     private Long newMember(OAuthInfoResponse oAuthInfoResponse) throws ValidationException {
+        TownEntity town = new TownEntity();
+        townRepository.save(town);
+
         MemberEntity member = MemberEntity.builder()
                 .email(oAuthInfoResponse.getEmail())
                 .gender(oAuthInfoResponse.getGender())
                 .ageRange(oAuthInfoResponse.getAgeRange())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+                .town(town)
                 .build();
         memberRepository.save(member);
-        townRepository.save(firstCreateInstance(member.getId()));
 
         for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("MBTP", true)) {
             memberTypeRepository.save(PCEntity.changeToMemberType(member));

@@ -9,10 +9,10 @@ import java.util.Map;
 @Embeddable
 @Getter
 public class FileInfo {
-    private final String original_name;
-    private final String mask_name;
-    private final String file_path;
-    private final String file_type;
+    private String original_name;
+    private String mask_name;
+    private String file_path;
+    private String file_type;
 
     public FileInfo(String original, String mask, String path, String type) {
         original_name = original;
@@ -26,5 +26,9 @@ public class FileInfo {
         this.mask_name = uploadFileInfo.get("masking");
         this.file_path = uploadFileInfo.get("path");
         this.file_type = file_type;
+    }
+
+    public FileInfo() {
+
     }
 }

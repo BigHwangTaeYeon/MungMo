@@ -33,6 +33,30 @@ public class LoginCheckAspect {
 
     @Before("@annotation(mungMo.memberService.com.annotation.LoginCheckEssential)")
     public void LoginCheckEssential(JoinPoint jp) throws Throwable{
+        Object[] args = jp.getArgs();
+        for (Object arg : args) {
+            System.out.println("arg = " + arg);
+            System.out.println("arg toString = " + arg.toString());
+        }
+        Stream<Object> objectStream = Arrays.stream(jp.getArgs())
+                .filter(argument -> argument instanceof HttpServletRequest);
+        System.out.println("objectStream = " + objectStream.findAny());
+
+
+        Stream<Object> authorization = Arrays.stream(jp.getArgs())
+                .filter(argument -> argument instanceof HttpServletRequest)
+                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty());
+        System.out.println("authorization = " + authorization.findAny().toString());
+
+
+        Stream<String> stringStream = Arrays.stream(jp.getArgs())
+                .filter(argument -> argument instanceof HttpServletRequest)
+                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty())
+                .map(a -> validateId((HttpServletRequest) a));
+
+        System.out.println("stringStream = " + stringStream.findAny());
+
+
         Arrays.stream(jp.getArgs())
                 .filter(argument -> argument instanceof HttpServletRequest)
                 .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty())

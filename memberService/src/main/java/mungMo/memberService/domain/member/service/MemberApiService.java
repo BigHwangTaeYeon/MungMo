@@ -7,6 +7,7 @@ import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.com.util.Upload;
 import mungMo.memberService.domain.embede.FileInfo;
+import mungMo.memberService.domain.member.dto.DogImgDTO;
 import mungMo.memberService.domain.member.dto.MemberDTO;
 import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.member.repository.MemberRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,13 @@ public class MemberApiService {
                 .orElseThrow(() -> new PreconditionFailedException(ResponseMessage.PRECONDITIONFAILED.getMessage()));
     }
 
+    @Transactional(readOnly = true)
+    public DogImgDTO dogImg(Long id) throws PreconditionFailedException {
+        return memberRepository.findById(id)
+                .map(MemberEntity::dogImgDTO)
+                .orElseThrow(() -> new PreconditionFailedException(ResponseMessage.PRECONDITIONFAILED.getMessage()));
+    }
+
     @Transactional
     public void registerNickname(String dogName, Long id) throws ValidationException {
         memberRepository.findById(id).ifPresent(entity -> entity.changeDogName(dogName));
@@ -44,15 +53,13 @@ public class MemberApiService {
 
     @Transactional
     public void updateDogImg(long id, MultipartFile file) {
-        Optional.of(file).ifPresent(img -> {
-                memberRepository.findById(id).ifPresent(entity -> {
-                    try {
-                        entity.fileInfoInstance(new FileInfo(new Upload(uploadDir, img).uploadImage(), "img"));
-                    } catch (FileUploadException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-        });
+        Optional.of(file).ifPresent(img -> memberRepository.findById(id).ifPresent(entity -> {
+            try {
+                entity.fileInfoInstance(new FileInfo(new Upload(uploadDir, img).uploadImage(), "img"));
+            } catch (FileUploadException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
     public MemberIdAndDogNameDTO dogName(long id) throws UnauthorizedException {

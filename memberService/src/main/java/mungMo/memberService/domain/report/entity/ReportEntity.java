@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "Report")
 public class ReportEntity {
     // memberId 참조
-    @Id
+    @Id @GeneratedValue
     @Column(name = "report_id")
     private Long id;
 
@@ -34,6 +34,16 @@ public class ReportEntity {
     public ReportEntity() {
     }
 
+    public ReportEntity(FileInfo fileInfo, ReportDTO dto) {
+        if(!dto.getFile_path().isEmpty()) {
+            this.fileInfo = fileInfo;
+        }
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.fromMemberId = dto.getFromId();
+        this.toMemberId = dto.getToId();
+    }
+
     public ReportEntity(ReportDTO dto) {
         title = dto.getTitle();
         content = dto.getContent();
@@ -52,8 +62,12 @@ public class ReportEntity {
                 .content(content)
                 .fromId(fromMemberId)
                 .toId(toMemberId)
-                .status(status)
+                .status(status == true ? ReportDTO.useStatus.DID : ReportDTO.useStatus.DIDNOT)
                 .createDate(create_date)
+                .file_path(fileInfo.getFile_path())
+                .original_name(fileInfo.getOriginal_name())
+                .mask_name(fileInfo.getMask_name())
+                .file_type(fileInfo.getFile_type())
                 .build();
     }
 }

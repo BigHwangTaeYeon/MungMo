@@ -1,12 +1,14 @@
 package mungMo.memberService.domain.member.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
 import mungMo.memberService.com.util.JwtUtils;
+import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.member.service.MemberApiService;
@@ -45,6 +47,17 @@ public class MemberApiController {
     public ResponseEntity<?> yourInfo(@PathVariable("id") Long id) throws PreconditionFailedException {
         return ResponseEntity.ok(
                 new Result<>(memberApiService.infoById(id))
+        );
+    }
+
+    /*
+     * id로 정보 가져오기
+     */
+    @LoginCheckEssential
+    @GetMapping("/dogImg")
+    public ResponseEntity<?> dogImg(HttpServletRequest request) throws PreconditionFailedException {
+        return ResponseEntity.ok(
+                new Result<>(memberApiService.dogImg(authTokensGenerator.extractMemberIdToHeader(request)))
         );
     }
 
@@ -89,12 +102,17 @@ public class MemberApiController {
      * 강아지 사진 업로드
      */
     @LoginCheckEssential
-    @PatchMapping("/updateDogImg")
+    @PostMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
-        memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
+        try {
+            memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
+        } catch (Exception e) {
+            System.out.println("exception : " + e.getMessage());
+        }
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
+    @Getter
     public static class Result<T> {
         private final T data;
         public Result(T data) {

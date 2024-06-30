@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class TownEntity {
     // memberId 참조
-    @Id
+    @Id @GeneratedValue
     @Column(name = "town_id")
     private Long id;
 
@@ -38,18 +38,8 @@ public class TownEntity {
         certification = true;
     }
 
-    public static TownEntity firstCreateInstance(long id) {
-        return new TownEntity(id);
-    }
-
     public TownEntity() {
-    }
-
-    public TownEntity(Long id) {
         certification = false;
-        LocalDateTime date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
-        System.out.println("TownEntity date = " + date);
-        certificationDate = date;
-        this.id = id;
+        certificationDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
     }
 }

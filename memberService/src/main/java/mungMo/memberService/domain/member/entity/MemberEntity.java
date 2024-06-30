@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
+import mungMo.memberService.domain.member.dto.DogImgDTO;
 import mungMo.memberService.domain.member.dto.MemberDTO;
 import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.town.entity.TownEntity;
@@ -72,11 +73,16 @@ public class MemberEntity {
         fileInfo = info;
     }
 
+    public MemberEntity setTown(TownEntity town){
+        this.town = town;
+        return this;
+    }
+
     public MemberEntity() {
     }
 
     @Builder
-    public MemberEntity(String email, String gender, String ageRange, SocialRoute oAuthProvider) {
+    public MemberEntity(String email, String gender, String ageRange, SocialRoute oAuthProvider, TownEntity town) {
         create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
         this.mannerTemperature = 30;
         this.email = email;
@@ -84,6 +90,7 @@ public class MemberEntity {
         this.ageRange = ageRange;
         this.memberAuthority = MemberAuthority.ROLE_MEMBER;
         this.oauthProvider = oAuthProvider;
+        this.town = town;
     }
 
     public MemberIdAndDogNameDTO changeToDogDTO() {
@@ -103,9 +110,15 @@ public class MemberEntity {
                 .ageRange(ageRange)
                 .mannerTemperature(mannerTemperature)
                 .townCertificated(town.isCertification())
+                .build();
+    }
+
+    public DogImgDTO dogImgDTO() {
+        return DogImgDTO.builder()
+                .file_path(fileInfo.getFile_path())
                 .original_name(fileInfo.getOriginal_name())
                 .mask_name(fileInfo.getMask_name())
-                .file_path(fileInfo.getFile_path())
+                .file_type(fileInfo.getFile_type())
                 .build();
     }
 }

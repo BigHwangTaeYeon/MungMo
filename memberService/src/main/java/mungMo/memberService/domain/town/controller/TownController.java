@@ -25,7 +25,7 @@ public class TownController {
 
     @LoginCheckEssential
     @PatchMapping("/registerTown")
-    public ResponseEntity<?> registerTown(HttpServletRequest request,@RequestParam String area) {
+    public ResponseEntity<?> registerTown(HttpServletRequest request, @RequestParam String area) {
         townService.register(area, authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request)));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }

@@ -16,8 +16,4 @@ public class MemberDTO {
     private String ageRange;
     private int mannerTemperature;
     private boolean townCertificated;
-    private String original_name;
-    private String mask_name;
-    private String file_path;
-    private String file_type;
 }
