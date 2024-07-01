@@ -38,19 +38,16 @@ public class ReportController {
 
     @LoginCheckEssential
     @GetMapping("/reportDetail/{id}")
-    public ResponseEntity<?> reportDetail(HttpServletRequest request, @PathVariable("id") long toId) {
+    public ResponseEntity<?> reportDetail(HttpServletRequest request, @PathVariable("id") long id) {
         return ResponseEntity.ok(
-                new Result<>(reportService.reportDetail(
-                        toId ,
-                        authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request))
-                ))
+                new Result<>(reportService.reportDetail(id))
         );
     }
 
     @PostMapping("/resisterReport")
-    public ResponseEntity<?> resisterReport(ReportDTO reportDTO, MultipartFile file) {
+    public ResponseEntity<?> resisterReport(HttpServletRequest request, ReportDTO reportDTO, MultipartFile file) {
         try {
-            reportService.register(reportDTO, file);
+            reportService.register(reportDTO.setFromId(authTokensGenerator.extractMemberIdToHeader(request)), file);
         }catch (Exception e) {
             System.out.println("exception : " + e.getMessage());
         }

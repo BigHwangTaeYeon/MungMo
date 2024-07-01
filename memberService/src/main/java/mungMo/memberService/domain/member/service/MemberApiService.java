@@ -62,10 +62,12 @@ public class MemberApiService {
         }));
     }
 
+    @Transactional
     public MemberIdAndDogNameDTO dogName(long id) throws UnauthorizedException {
         return memberRepository.findById(id).map(MemberEntity::changeToDogDTO).orElseThrow(()->new UnauthorizedException("token error"));
     }
 
+    @Transactional
     public void dogLike(Long id, String like) {
         memberRepository.findById(id).ifPresent(entity -> entity.changeDogLike(like));
     }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/auth")
 public class MemberController {
 
     private final MemberService oAuthLoginService;
@@ -20,13 +20,13 @@ public class MemberController {
         this.oAuthLoginService = oAuthLoginService;
     }
 
-    @GetMapping("/getTokenToKakao")
+    @GetMapping("/kakao")
     public ResponseEntity<AuthTokens> loginKakao(@RequestParam(value = "code", required = false) String code) throws IOException, ParseException {
         KakaoLoginParams params = new KakaoLoginParams(code);
         return ResponseEntity.ok(oAuthLoginService.login(params));
     }
 
-    @GetMapping("/getTokenToNaver")
+    @GetMapping("/naver")
     public ResponseEntity<AuthTokens> loginNaver(@RequestParam(value = "code", required = false) String code) throws IOException, ParseException {
         NaverLoginParams params = new NaverLoginParams(code);
         return ResponseEntity.ok(oAuthLoginService.login(params));

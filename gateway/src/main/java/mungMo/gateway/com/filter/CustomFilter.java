@@ -1,6 +1,5 @@
-package mungMo.gateway.filter;
+package mungMo.gateway.com.filter;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -11,9 +10,8 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
-
-    public GlobalFilter(){
+public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
+    public CustomFilter(){
         super(Config.class);
     }
 
@@ -24,25 +22,16 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
             ServerHttpResponse response = exchange.getResponse();
 
             //pre필터 적용
-            log.info("Custom PRE filter baseMessage: request id-> {}", config.getBaseMessage());
-
-            if (config.isPreLogger()){
-                log.info("Global Filter start: request id -> {}", request.getId());
-            }
+            log.info("{} PRE filter: request id-> {}", config.baseMessage, request.getId());
 
             //post 필터 적용
             return chain.filter(exchange).then(Mono.fromRunnable(()-> {
-                if (config.isPostLogger()){
-                    log.info("Global Filter start: request id -> {}", response.getStatusCode());
-                }
+                log.info("{} POST filter: response code -> {}", config.baseMessage, response.getStatusCode());
             }));
         };
     }
 
-    @Data
     public static class Config {
         private String baseMessage;
-        private boolean preLogger;
-        private boolean postLogger;
     }
 }

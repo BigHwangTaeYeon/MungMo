@@ -1,5 +1,6 @@
 package mungMo.memberService.domain.report.service;
 
+import jakarta.ws.rs.NotFoundException;
 import mungMo.memberService.com.exception.FileUploadException;
 import mungMo.memberService.com.util.Upload;
 import mungMo.memberService.domain.embede.FileInfo;
@@ -36,9 +37,10 @@ public class ReportService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ReportDTO reportDetail(long fromMemberId, long toMemberId) {
-        return reportRepository.findByFromMemberIdAndToMemberId(fromMemberId, toMemberId)
-                .changeToDTO();
+    public ReportDTO reportDetail(long id) {
+        return reportRepository.findById(id)
+                .map(ReportEntity::changeToDTO)
+                .orElseThrow(()-> new NotFoundException("존재하지 않는 데이터입니다."));
     }
 
     @Transactional

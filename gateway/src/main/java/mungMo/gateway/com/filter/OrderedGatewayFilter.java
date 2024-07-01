@@ -1,4 +1,4 @@
-package mungMo.gateway.filter;
+package mungMo.gateway.com.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

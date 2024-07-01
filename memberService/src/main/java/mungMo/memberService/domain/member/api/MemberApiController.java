@@ -7,10 +7,7 @@ import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
-import mungMo.memberService.com.util.JwtUtils;
-import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
-import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +41,7 @@ public class MemberApiController {
      */
     @LoginCheckEssential
     @GetMapping("/memberInfo/{id}")
-    public ResponseEntity<?> yourInfo(@PathVariable("id") Long id) throws PreconditionFailedException {
+    public ResponseEntity<?> yourInfo(HttpServletRequest request, @PathVariable("id") Long id) throws PreconditionFailedException {
         return ResponseEntity.ok(
                 new Result<>(memberApiService.infoById(id))
         );
@@ -82,8 +79,8 @@ public class MemberApiController {
      * @return
      */
     @LoginCheckEssential
-    @PostMapping("/dogLike")
-    public ResponseEntity<?> dogLike(HttpServletRequest request, String like) {
+    @PatchMapping("/dogLike")
+    public ResponseEntity<?> dogLike(HttpServletRequest request, @RequestParam("like") String like) {
         memberApiService.dogLike(authTokensGenerator.extractMemberIdToHeader(request), like);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
@@ -104,11 +101,7 @@ public class MemberApiController {
     @LoginCheckEssential
     @PostMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
-        try {
-            memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
-        } catch (Exception e) {
-            System.out.println("exception : " + e.getMessage());
-        }
+        memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 

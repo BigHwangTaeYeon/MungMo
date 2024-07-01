@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class ReportDTO {
+    private Long seq;
+
     private String title;
     private String content;
 
@@ -30,6 +32,11 @@ public class ReportDTO {
 
     public enum useStatus {
         DID, DIDNOT
+    }
+
+    public ReportDTO setFromId(Long id){
+        fromId = id;
+        return this;
     }
 
 }

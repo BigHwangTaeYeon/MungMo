@@ -5,6 +5,7 @@ import mungMo.memberService.domain.member.dto.MemberTypeDTO;
 import mungMo.memberService.domain.member.entity.MemberTypeEntity;
 import mungMo.memberService.domain.member.repository.MemberTypeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class MemberTypeService {
         this.memberTypeRepository = memberTypeRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberTypeDTO> userTypeList(Long memberId) {
         return memberTypeRepository.findByMemberId(memberId)
                 .stream()
@@ -25,24 +27,23 @@ public class MemberTypeService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Transactional
     public void userTypeResister(Long id, List<Integer> code) {
         resisterType(memberTypeRepository.findByMemberIdAndType(id, "MBTP"), code);
     }
 
+    @Transactional
     public void dogTypeResister(Long id, List<Integer> code) {
         resisterType(memberTypeRepository.findByMemberIdAndType(id, "DGTP"), code);
     }
 
     private void resisterType(LinkedList<MemberTypeEntity> dtoList, List<Integer> codeList) {
+        dtoList.forEach(MemberTypeEntity::useN);
 
         for (Integer code : codeList) {
             dtoList.stream()
                     .filter(entity -> code == entity.getCode())
                     .forEach(MemberTypeEntity::useY);
-            dtoList.stream()
-                    .filter(entity -> code != entity.getCode())
-                    .forEach(MemberTypeEntity::useN);
         }
-
     }
 }

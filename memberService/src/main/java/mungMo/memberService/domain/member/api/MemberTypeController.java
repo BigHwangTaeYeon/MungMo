@@ -1,17 +1,15 @@
 package mungMo.memberService.domain.member.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
-import mungMo.memberService.com.util.JwtUtils;
 import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
-import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.member.service.MemberTypeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1")
@@ -30,7 +28,7 @@ public class MemberTypeController {
      * @return
      */
     @LoginCheckEssential
-    @PatchMapping("/userTypeList")
+    @GetMapping("/userTypeList")
     public ResponseEntity<?> userTypeList(HttpServletRequest request) {
         return ResponseEntity.ok(
                 new Result<>(memberTypeService.userTypeList(authTokensGenerator.extractMemberIdToHeader(request)))
@@ -63,6 +61,7 @@ public class MemberTypeController {
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 
+    @Getter
     public static class Result<T> {
         private final T data;
         public Result(T data) {

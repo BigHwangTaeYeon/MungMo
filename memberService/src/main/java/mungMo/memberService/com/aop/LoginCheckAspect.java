@@ -24,48 +24,39 @@ import java.util.stream.Stream;
 @Slf4j
 public class LoginCheckAspect {
     private final JwtTokenProvider jwtProvider;
-    private final AuthTokensGenerator authTokensGenerator;
 
-    public LoginCheckAspect(JwtTokenProvider jwtProvider, AuthTokensGenerator authTokensGenerator) {
+    public LoginCheckAspect(JwtTokenProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
-        this.authTokensGenerator = authTokensGenerator;
     }
 
     @Before("@annotation(mungMo.memberService.com.annotation.LoginCheckEssential)")
     public void LoginCheckEssential(JoinPoint jp) throws Throwable{
-        Object[] args = jp.getArgs();
-        for (Object arg : args) {
-            System.out.println("arg = " + arg);
-            System.out.println("arg toString = " + arg.toString());
-        }
-        Stream<Object> objectStream = Arrays.stream(jp.getArgs())
-                .filter(argument -> argument instanceof HttpServletRequest);
-        System.out.println("objectStream = " + objectStream.findAny());
+//        Arrays.stream(jp.getArgs())
+//                .filter(argument -> argument instanceof HttpServletRequest)
+//                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty())
+//                .filter(result -> !jwtProvider.extractSubject(jwtProvider.getAccessToken(((HttpServletRequest) result))).isEmpty())
+//                .findFirst()
+//                .orElseThrow(() -> new LoginException(ResponseMessage.valueOfCode("Unauthorized").getMessage()));
 
 
-        Stream<Object> authorization = Arrays.stream(jp.getArgs())
-                .filter(argument -> argument instanceof HttpServletRequest)
-                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty());
-        System.out.println("authorization = " + authorization.findAny().toString());
-
-
-        Stream<String> stringStream = Arrays.stream(jp.getArgs())
-                .filter(argument -> argument instanceof HttpServletRequest)
-                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty())
-                .map(a -> validateId((HttpServletRequest) a));
-
-        System.out.println("stringStream = " + stringStream.findAny());
-
-
+        log.info("LoginCheckEssential AOP called");
         Arrays.stream(jp.getArgs())
                 .filter(argument -> argument instanceof HttpServletRequest)
-                .filter(request -> !((HttpServletRequest) request).getHeader("Authorization").isEmpty())
-                .filter(result -> !jwtProvider.extractSubject(jwtProvider.getAccessToken(((HttpServletRequest) result))).isEmpty())
                 .findFirst()
-                .orElseThrow(() -> new LoginException(ResponseMessage.valueOfCode("Unauthorized").getMessage()));
-    }
-
-    private String validateId(HttpServletRequest request) {
-        return jwtProvider.extractSubject(jwtProvider.getAccessToken(request));
+                .ifPresentOrElse(request -> {
+                    HttpServletRequest httpRequest = (HttpServletRequest) request;
+                    String authorizationHeader = httpRequest.getHeader("Authorization");
+                    log.info("Authorization Header: " + authorizationHeader);  // 로그 추가
+                    if (authorizationHeader == null || authorizationHeader.isEmpty()) {
+                        throw new LoginException(ResponseMessage.valueOfCode("Unauthorized").getMessage());
+                    }
+                    String token = jwtProvider.getAccessToken(httpRequest);
+                    String subject = jwtProvider.extractSubject(token);
+                    if (subject == null || subject.isEmpty()) {
+                        throw new LoginException(ResponseMessage.valueOfCode("Unauthorized").getMessage());
+                    }
+                }, () -> {
+                    throw new LoginException(ResponseMessage.valueOfCode("Unauthorized").getMessage());
+                });
     }
 }

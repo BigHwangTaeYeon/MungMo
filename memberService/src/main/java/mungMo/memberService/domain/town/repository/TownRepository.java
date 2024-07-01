@@ -9,13 +9,21 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TownRepository extends JpaRepository<TownEntity, Long> {
-    List<TownEntity> findByCertificationDateBetween(LocalDateTime startDate, LocalDateTime endDate);
-    List<TownEntity> findByCertificationAndCertificationDateBetween(boolean Certification, LocalDateTime startDate, LocalDateTime endDate);
+    Optional<List<TownEntity>> findByCertificationDateBefore(LocalDateTime localDateTime);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "UPDATE town t SET t.certification = false WHERE t.certification = true  AND t.certification_date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    @Query(value = "UPDATE town t SET t.certification = false, area = null " +
+            "WHERE t.certification = true " +
+            "AND t.certification_date BETWEEN :startDate AND :endDate", nativeQuery = true)
     void bulkCertificationFalse(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime end);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE town t SET t.certification = false, area = null " +
+            "WHERE t.certification = true " +
+            "AND t.certification_date < :day ", nativeQuery = true)
+    void bulkCertificationFalseToDay(@Param("day") LocalDateTime day);
 }

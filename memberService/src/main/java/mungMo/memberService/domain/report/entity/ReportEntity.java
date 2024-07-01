@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.report.dto.ReportDTO;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "Report")
@@ -35,9 +37,7 @@ public class ReportEntity {
     }
 
     public ReportEntity(FileInfo fileInfo, ReportDTO dto) {
-        if(!dto.getFile_path().isEmpty()) {
-            this.fileInfo = fileInfo;
-        }
+        if(Optional.ofNullable(fileInfo).isPresent()) this.fileInfo = fileInfo;
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.fromMemberId = dto.getFromId();
@@ -51,23 +51,34 @@ public class ReportEntity {
         toMemberId = dto.getToId();
         status = false;
         create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
-        if(!dto.getFile_path().isEmpty()) {
-            fileInfo = new FileInfo(dto.getOriginal_name(), dto.getMask_name(), dto.getFile_path(), dto.getFile_type());
-        }
+        if(StringUtils.hasText(dto.getFile_path())) fileInfo = new FileInfo(dto.getOriginal_name(), dto.getMask_name(), dto.getFile_path(), dto.getFile_type());
     }
 
     public ReportDTO changeToDTO() {
-        return ReportDTO.builder()
-                .title(title)
-                .content(content)
-                .fromId(fromMemberId)
-                .toId(toMemberId)
-                .status(status == true ? ReportDTO.useStatus.DID : ReportDTO.useStatus.DIDNOT)
-                .createDate(create_date)
-                .file_path(fileInfo.getFile_path())
-                .original_name(fileInfo.getOriginal_name())
-                .mask_name(fileInfo.getMask_name())
-                .file_type(fileInfo.getFile_type())
-                .build();
+        if(Optional.ofNullable(fileInfo).isPresent()) {
+            return ReportDTO.builder()
+                    .seq(id)
+                    .title(title)
+                    .content(content)
+                    .fromId(fromMemberId)
+                    .toId(toMemberId)
+                    .status(status ? ReportDTO.useStatus.DID : ReportDTO.useStatus.DIDNOT)
+                    .createDate(create_date)
+                    .file_path(fileInfo.getFile_path())
+                    .original_name(fileInfo.getOriginal_name())
+                    .mask_name(fileInfo.getMask_name())
+                    .file_type(fileInfo.getFile_type())
+                    .build();
+        } else {
+            return ReportDTO.builder()
+                    .seq(id)
+                    .title(title)
+                    .content(content)
+                    .fromId(fromMemberId)
+                    .toId(toMemberId)
+                    .status(status ? ReportDTO.useStatus.DID : ReportDTO.useStatus.DIDNOT)
+                    .createDate(create_date)
+                    .build();
+        }
     }
 }
