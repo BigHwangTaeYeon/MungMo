@@ -29,12 +29,12 @@ public class MemberTypeService {
 
     @Transactional
     public void userTypeResister(Long id, List<Integer> code) {
-        resisterType(memberTypeRepository.findByMemberIdAndType(id, "MBTP"), code);
+        resisterType(memberTypeRepository.findByMemberIdAndPublicCodeCodeType(id, "MBTP"), code);
     }
 
     @Transactional
     public void dogTypeResister(Long id, List<Integer> code) {
-        resisterType(memberTypeRepository.findByMemberIdAndType(id, "DGTP"), code);
+        resisterType(memberTypeRepository.findByMemberIdAndPublicCodeCodeType(id, "DGTP"), code);
     }
 
     private void resisterType(LinkedList<MemberTypeEntity> dtoList, List<Integer> codeList) {
@@ -42,7 +42,7 @@ public class MemberTypeService {
 
         for (Integer code : codeList) {
             dtoList.stream()
-                    .filter(entity -> code == entity.getCode())
+                    .filter(entity -> code == entity.getPublicCode().getCode())
                     .forEach(MemberTypeEntity::useY);
         }
     }

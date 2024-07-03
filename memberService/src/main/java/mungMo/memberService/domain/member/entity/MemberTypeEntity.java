@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.member.dto.MemberTypeDTO;
+import mungMo.memberService.domain.otherService.publicCode.entity.PublicCodeEntity;
 
 import java.time.LocalDateTime;
 
@@ -15,15 +16,16 @@ public class MemberTypeEntity {
     @Column(name = "member_type_id")
     private Long id;
 
-    private String type;
-    @Getter
-    private int code;
     private boolean use;
     private LocalDateTime update_date;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private MemberEntity member;
+
+    @Getter
+    @OneToOne
+    private PublicCodeEntity publicCode;
 
     public void useY() {
         this.use = true;
@@ -36,9 +38,8 @@ public class MemberTypeEntity {
     public MemberTypeEntity() {
     }
 
-    public MemberTypeEntity(String codeType, int code, MemberEntity member) {
-        this.type = codeType;
-        this.code = code;
+    public MemberTypeEntity(PublicCodeEntity publicCode, MemberEntity member) {
+        this.publicCode = publicCode;
         this.use = false;
         this.member = member;
         this.update_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
@@ -46,8 +47,9 @@ public class MemberTypeEntity {
 
     public MemberTypeDTO changeToDTO() {
         return MemberTypeDTO.builder()
-                .type(type)
-                .code(code)
+                .type(publicCode.getCodeType())
+                .code(publicCode.getCode())
+                .codeName(publicCode.getCodeName())
                 .use(use)
                 .build();
     }

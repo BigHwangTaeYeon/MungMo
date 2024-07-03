@@ -1,6 +1,7 @@
 package mungMo.memberService.domain.otherService.publicCode.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.entity.MemberTypeEntity;
 import mungMo.memberService.domain.otherService.publicCode.dto.PublicCodeDTO;
@@ -12,11 +13,14 @@ public class PublicCodeEntity {
     @Column(name = "public_code_id")
     private Long id;
 
+    @Getter
     @Column(name = "code_type")
     private String codeType;
 
+    @Getter
     private int code;
 
+    @Getter
     @Column(name = "code_name")
     private String codeName;
 
@@ -31,7 +35,7 @@ public class PublicCodeEntity {
                 .build();
     }
 
-    public MemberTypeEntity changeToMemberType(MemberEntity member) {
-        return new MemberTypeEntity(codeType, code, member);
+    public MemberTypeEntity changeToMemberType(PublicCodeEntity publicCode, MemberEntity member) {
+        return new MemberTypeEntity(publicCode, member);
     }
 }

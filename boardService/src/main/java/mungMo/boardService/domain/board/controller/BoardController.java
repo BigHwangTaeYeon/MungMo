@@ -33,7 +33,7 @@ public class BoardController {
         return ResponseEntity.ok(boardService.boardOne(id));
     }
 
-    @PostMapping("boardResister/id")
+    @PostMapping("auth/boardResister")
     public ResponseEntity<?> boardResister(HttpServletRequest request, BoardDTO dto, MultipartFile file) {
         boardService.boardResister(dto, Long.valueOf(request.getHeader("userId")), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
@@ -43,7 +43,7 @@ public class BoardController {
      * DELETE
      * @param <T>
      */
-    @DeleteMapping("boardDelete/id/{id}")
+    @DeleteMapping("auth/boardDelete/{id}")
     public ResponseEntity<?> boardDelete(HttpServletRequest request, @PathVariable("id") long boardId) {
         boardService.boardDelete(Long.valueOf(request.getHeader("userId")), boardId);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
@@ -53,7 +53,7 @@ public class BoardController {
      * MODIFY
      * @param <T>
      */
-    @PatchMapping("boardModify/id/{id}")
+    @PatchMapping("auth/boardModify/{id}")
     public ResponseEntity<?> boardModify(HttpServletRequest request, @PathVariable("id") long boardId, BoardDTO dto) {
         boardService.boardModify(Long.valueOf(request.getHeader("userId")), boardId, dto);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());

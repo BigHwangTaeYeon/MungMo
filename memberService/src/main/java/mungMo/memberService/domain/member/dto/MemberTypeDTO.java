@@ -10,5 +10,6 @@ import lombok.Setter;
 public class MemberTypeDTO {
     private String type;
     private int code;
+    private String codeName;
     private boolean use;
 }

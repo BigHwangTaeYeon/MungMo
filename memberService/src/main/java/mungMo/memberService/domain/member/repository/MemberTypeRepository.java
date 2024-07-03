@@ -11,5 +11,5 @@ import java.util.List;
 public interface MemberTypeRepository extends JpaRepository<MemberTypeEntity, Long> {
     List<MemberTypeEntity> findByMemberId(Long memberId);
 
-    LinkedList<MemberTypeEntity> findByMemberIdAndType(Long id, String type);
+    LinkedList<MemberTypeEntity> findByMemberIdAndPublicCodeCodeType(Long id, String type);
 }

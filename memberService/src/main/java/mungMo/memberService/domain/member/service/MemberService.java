@@ -80,10 +80,10 @@ public class MemberService {
         memberRepository.save(member);
 
         for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("MBTP", true)) {
-            memberTypeRepository.save(PCEntity.changeToMemberType(member));
+            memberTypeRepository.save(PCEntity.changeToMemberType(PCEntity, member));
         }
         for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("DGTP", true)) {
-            memberTypeRepository.save(PCEntity.changeToMemberType(member));
+            memberTypeRepository.save(PCEntity.changeToMemberType(PCEntity, member));
         }
 
         return memberRepository.findByEmail(member.getEmail()).getId();
