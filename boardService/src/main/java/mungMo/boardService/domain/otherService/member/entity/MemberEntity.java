@@ -8,7 +8,7 @@ import mungMo.boardService.domain.otherService.town.entity.TownEntity;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "oauth_login")
+@Table(name = "service_oauth_login")
 @Getter
 public class MemberEntity {
     @Id
@@ -48,7 +48,7 @@ public class MemberEntity {
 
     private LocalDateTime recent_date;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "town_id")
     private TownEntity town;
 

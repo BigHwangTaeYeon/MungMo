@@ -63,6 +63,7 @@ public class BoardService {
     }
 
     public void boardResister(BoardDTO dto, Long userId, MultipartFile file) {
+
         try {
             boardRepository.save(BoardEntity.of(
                     dto.setFile(new Upload(uploadDir, file).uploadImage(), "img"),

@@ -33,7 +33,7 @@ public class BoardController {
         return ResponseEntity.ok(boardService.boardOne(id));
     }
 
-    @PostMapping("auth/boardResister")
+    @PostMapping("auth/boardRegister")
     public ResponseEntity<?> boardResister(HttpServletRequest request, BoardDTO dto, MultipartFile file) {
         boardService.boardResister(dto, Long.valueOf(request.getHeader("userId")), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());

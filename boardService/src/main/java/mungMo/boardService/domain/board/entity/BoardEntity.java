@@ -53,6 +53,8 @@ public class BoardEntity {
         this.createDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
         if(Optional.ofNullable(boardDTO.getFile_path()).isPresent()) {
             fileInfo = new FileInfo(boardDTO.getOriginal_name(), boardDTO.getMask_name(), boardDTO.getFile_path(), boardDTO.getFile_type());
+        } else {
+            fileInfo = new FileInfo();
         }
         this.writer = member;
     }

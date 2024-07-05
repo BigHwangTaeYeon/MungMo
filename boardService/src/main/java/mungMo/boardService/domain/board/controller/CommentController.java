@@ -17,7 +17,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("auth/commentResister")
+    @PostMapping("auth/commentRegister")
     public ResponseEntity<?> commentResister(HttpServletRequest request, @RequestBody CommentDTO dto) {
         commentService.commentResister(dto.getComment(), dto.getBoardId(), Long.valueOf(request.getHeader("userId")));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());

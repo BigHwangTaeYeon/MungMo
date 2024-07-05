@@ -2,13 +2,12 @@ package mungMo.boardService.domain.otherService.town.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.boardService.com.util.GetDate;
 import mungMo.boardService.domain.otherService.member.entity.MemberEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "town")
+@Table(name = "service_town")
 @Getter
 public class TownEntity {
     // memberId 참조
