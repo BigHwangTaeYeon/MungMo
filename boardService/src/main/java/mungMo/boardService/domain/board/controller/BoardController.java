@@ -3,6 +3,7 @@ package mungMo.boardService.domain.board.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import mungMo.boardService.com.response.ResponseMessage;
+import mungMo.boardService.com.response.exception.FileUploadException;
 import mungMo.boardService.domain.board.dto.BoardDTO;
 import mungMo.boardService.domain.board.dto.PageDTO;
 import mungMo.boardService.domain.board.service.BoardService;
@@ -34,7 +35,7 @@ public class BoardController {
     }
 
     @PostMapping("auth/boardRegister")
-    public ResponseEntity<?> boardResister(HttpServletRequest request, BoardDTO dto, MultipartFile file) {
+    public ResponseEntity<?> boardResister(HttpServletRequest request, BoardDTO dto, MultipartFile file) throws FileUploadException {
         boardService.boardResister(dto, Long.valueOf(request.getHeader("userId")), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }

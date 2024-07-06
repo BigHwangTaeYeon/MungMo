@@ -25,12 +25,11 @@ public class BoardDTO {
     private String file_path;
     private String file_type;
 
-    public BoardDTO setFile(Map<String, String> uploadFileInfo, String file_type) {
+    public BoardDTO setFile(Map<String, String> uploadFileInfo) {
         if(StringUtils.hasText(uploadFileInfo.get("original"))) {
             this.original_name = uploadFileInfo.get("original");
             this.mask_name = uploadFileInfo.get("masking");
             this.file_path = uploadFileInfo.get("path");
-            this.file_type = file_type;
         }
         return this;
     }

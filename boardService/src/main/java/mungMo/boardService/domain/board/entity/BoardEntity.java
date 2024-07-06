@@ -2,6 +2,7 @@ package mungMo.boardService.domain.board.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NonNull;
 import mungMo.boardService.com.util.GetDate;
 import mungMo.boardService.domain.board.dto.BoardDTO;
 import mungMo.boardService.domain.board.embede.FileInfo;
@@ -45,6 +46,9 @@ public class BoardEntity {
 
     @Embedded
     private FileInfo fileInfo;
+
+    public BoardEntity() {
+    }
 
     private BoardEntity(BoardDTO boardDTO, MemberEntity member) {
         this.title = boardDTO.getTitle();

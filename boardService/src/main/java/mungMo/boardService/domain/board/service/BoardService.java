@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -62,17 +59,20 @@ public class BoardService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public void boardResister(BoardDTO dto, Long userId, MultipartFile file) {
+    public void boardResister(BoardDTO dto, Long userId, MultipartFile fileInfo) throws FileUploadException {
 
-        try {
+        Optional<MultipartFile> file = Optional.ofNullable(fileInfo);
+
+        if(file.isPresent()) {
             boardRepository.save(BoardEntity.of(
-                    dto.setFile(new Upload(uploadDir, file).uploadImage(), "img"),
-                    memberRepository.findById(userId).orElseThrow(NotFoundException::new))
-            );
-        } catch (FileUploadException e) {
-            throw new RuntimeException(e);
+                    dto.setFile(new Upload(uploadDir, file.get()).uploadImage()),
+                    memberRepository.findById(userId).orElseThrow(NotFoundException::new)
+            ));
+        } else {
+            boardRepository.save(BoardEntity.of(
+                    dto, memberRepository.findById(userId).orElseThrow(NotFoundException::new)
+            ));
         }
-
     }
 
     public void boardDelete(Long userId, long boardId) {
