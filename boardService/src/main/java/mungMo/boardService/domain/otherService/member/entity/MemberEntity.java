@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import mungMo.boardService.domain.board.embede.FileInfo;
 import mungMo.boardService.domain.otherService.town.entity.TownEntity;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "service_oauth_login")
+@Table(name = "oauth_login")
 @Getter
 public class MemberEntity {
     @Id
@@ -17,6 +18,7 @@ public class MemberEntity {
     private Long id;
 
     @Column(nullable = false)
+    @ColumnDefault("'doesNotExist'")
     private String email;
 
     @Column(name = "dog_name")
@@ -26,11 +28,15 @@ public class MemberEntity {
     private String dogLike;
 
     @Column(name = "manner_temperature", nullable = false)
+    @ColumnDefault("30")
     private int mannerTemperature;
 
     @Column(nullable = false)
+    @ColumnDefault("'doesNotExist'")
     private String gender;
+
     @Column(name = "age_range", nullable = false)
+    @ColumnDefault("'doesNotExist'")
     private String ageRange;
 
     @Enumerated(EnumType.STRING)
