@@ -67,17 +67,15 @@ public class MemberService {
 
     @Transactional
     private Long newMember(OAuthInfoResponse oAuthInfoResponse) throws ValidationException {
-        TownEntity town = new TownEntity();
-        townRepository.save(town);
-
         MemberEntity member = MemberEntity.builder()
                 .email(oAuthInfoResponse.getEmail())
                 .gender(oAuthInfoResponse.getGender())
                 .ageRange(oAuthInfoResponse.getAgeRange())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
-                .town(town)
                 .build();
         memberRepository.save(member);
+
+        townRepository.save(new TownEntity(member));
 
         for (PublicCodeEntity PCEntity : publicCodeRepository.findByCodeTypeAndUseYN("MBTP", true)) {
             memberTypeRepository.save(PCEntity.changeToMemberType(PCEntity, member));

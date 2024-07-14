@@ -23,8 +23,8 @@ public class TownEntity {
     @Column(name = "certification_date")
     private LocalDateTime certificationDate;
 
-//    @JoinColumn(name = "member_id")
-    @OneToOne(mappedBy = "town", cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    @OneToOne(cascade = CascadeType.ALL)
     private MemberEntity member;
 
     public TownEntity() {

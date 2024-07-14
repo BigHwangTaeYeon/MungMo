@@ -1,10 +1,9 @@
-package mungMo.boardService.domain.otherService.member.entity;
+package mungmo.mungmoChat.otherDomain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.boardService.domain.board.embede.FileInfo;
-import mungMo.boardService.domain.otherService.town.entity.TownEntity;
-import org.hibernate.annotations.ColumnDefault;
+import mungmo.mungmoChat.otherDomain.member.dto.MemberDTO;
+import org.apache.tomcat.jni.FileInfo;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +17,6 @@ public class MemberEntity {
     private Long id;
 
     @Column(nullable = false)
-    @ColumnDefault("'doesNotExist'")
     private String email;
 
     @Column(name = "dog_name")
@@ -28,24 +26,17 @@ public class MemberEntity {
     private String dogLike;
 
     @Column(name = "manner_temperature", nullable = false)
-    @ColumnDefault("30")
     private int mannerTemperature;
 
     @Column(nullable = false)
-    @ColumnDefault("'doesNotExist'")
     private String gender;
 
     @Column(name = "age_range", nullable = false)
-    @ColumnDefault("'doesNotExist'")
     private String ageRange;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "memberauthority")
     private MemberAuthority memberAuthority;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "oauthprovider")
-    private SocialRoute oauthProvider;
 
     @Embedded
     private FileInfo fileInfo;
@@ -54,9 +45,18 @@ public class MemberEntity {
 
     private LocalDateTime recent_date;
 
-    @OneToOne(mappedBy = "member")
-    private TownEntity town;
-
     public MemberEntity() {
+    }
+
+    public MemberDTO changeToDTO() {
+        return MemberDTO.builder()
+                .memberId(id)
+                .email(email)
+                .dogName(dogName)
+                .dogLike(dogLike)
+                .gender(gender)
+                .ageRange(ageRange)
+                .mannerTemperature(mannerTemperature)
+                .build();
     }
 }

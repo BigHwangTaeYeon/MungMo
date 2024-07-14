@@ -24,8 +24,8 @@ public class TownEntity {
     @Column(name = "certification_date")
     private LocalDateTime certificationDate;
 
-//    @JoinColumn(name = "member_id")
-    @OneToOne(mappedBy = "town", cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    @OneToOne(cascade = CascadeType.ALL)
     private MemberEntity member;
 
     public void certified(String area) {
@@ -38,8 +38,9 @@ public class TownEntity {
         certification = true;
     }
 
-    public TownEntity() {
+    public TownEntity(MemberEntity member) {
         certification = false;
+        this.member = member;
         certificationDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
     }
 }

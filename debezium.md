@@ -26,8 +26,6 @@ my.cnf 설정 정리
     
     # 또는 Mixed replication 설정
     # binlog_format=MIXED
-    
-    log_bin = ON
 
 
 
@@ -248,107 +246,162 @@ GRANT RELOAD, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO `user`@`localhost`
 }
 ```
 
+Caused by: io.debezium.DebeziumException: Encountered change event for table mungmomember.oauth_login whose schema isn't known to this connector
+- GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'mungmo'@'%';
+- [mysqld]
+  server-id=1
+  log_bin=mysql-bin
+  binlog_format=ROW
+- "topic.creation.default.replication.factor": 1,
+  "topic.creation.default.partitions": 1,
+
+
+```json
+{
+    "name": "mysql-debezium-connector_oauth_login",
+    "config": {
+        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+        "database.hostname": "localhost",
+        "database.port": "3306",
+        "database.user": "mungmo",
+        "database.password": "1234",
+        "database.server.id": "184054",
+        "database.server.name": "mungmoMember_server",
+        "database.include.list": "mungmoMember",
+        "table.include.list": "mungmoMember.oauth_login",
+        "database.history.kafka.bootstrap.servers": "localhost:9092",
+        "database.history.kafka.topic": "oauth_login_history",
+        "schema.history.internal": "io.debezium.storage.file.history.FileSchemaHistory",
+        "schema.history.internal.file.filename": "/Users/bighwang/Documents/workspace/MungMo/kafka_2.13-3.7.0/connect/storage/schemahistory.dat",
+        "topic.prefix": "test100",
+        "include.schema.changes": "true",
+
+        "primary.key.mode": "record_key",
+        "primary.key.fields": "member_id",
+
+        "auto.leader.rebalance.enable": "true",
+
+        "transforms": "unwrap",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+
+        "topic.creation.default.replication.factor": 1,
+        "topic.creation.default.partitions": 1,
+
+        "snapshot.mode": "initial",
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": "http://localhost:8081",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": "http://localhost:8081",
+        "key.converter.schemas.enable": "true",
+        "value.converter.schemas.enable": "true"
+    }
+}
+```
+```json
+{
+    "name": "mysql-sink-connector_oauth_login",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "topics": "test100.mungmoMember.oauth_login",
+        "connection.url": "jdbc:mysql://localhost:3306/mungmoBoard",
+        "connection.user": "mungmo",
+        "connection.password": "1234",
+        "auto.create": "true",
+        "auto.evolve": "true",
+        "insert.mode": "upsert",
+        "pk.mode": "record_key",
+        "pk.fields": "member_id",
+        "table.name.format": "oauth_login",
+        "delete.enabled": "true",
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": "http://localhost:8081",
+        "key.converter.schemas.enable": "true",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": "http://localhost:8081",
+        "value.converter.schemas.enable": "true",
+
+        "transforms": "dropFields,convertCreateDate,convertRecentDate",
+        "transforms.dropFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+        "transforms.dropFields.blacklist": "op,ts_ns,transaction,ts_us,before,after,source.ts_ms,source.transaction,source.ts_ns,source",
+
+        "transforms.convertCreateDate.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+        "transforms.convertCreateDate.field": "create_date",
+        "transforms.convertCreateDate.target.type": "Timestamp",
+        "transforms.convertCreateDate.format": "yyyy-MM-dd HH:mm:ss.SSSSSS",
+        "transforms.convertCreateDate.unix.precision": "microseconds",
+
+        "transforms.convertRecentDate.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+        "transforms.convertRecentDate.field": "recent_date",
+        "transforms.convertRecentDate.target.type": "Timestamp",
+        "transforms.convertRecentDate.format": "yyyy-MM-dd HH:mm:ss.SSSSSS",
+        "transforms.convertRecentDate.unix.precision": "microseconds"
+    }
+}
+```
+
+"database.history.kafka.topic": "oauth_login_history" 
+- server.properties auto.create.topics.enable=true 추가
+
+io.debezium.DebeziumException: Encountered change event for table mungmomember.oauth_login whose schema isn't known to this connector
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### kafka
+
 http://localhost:8081/subjects/test005.mungmoMember.oauth_login-key/versions/latest
 
 bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
-bin/kafka-server-start.sh -daemon config/server.properties
+bin/kafka-server-start.sh -daemon config/server-1.properties
+bin/kafka-server-start.sh -daemon config/server-2.properties
+bin/kafka-server-start.sh -daemon config/server-3.properties
+
+bin/zookeeper-server-stop.sh -daemon config/zookeeper.properties
+bin/kafka-server-stop.sh -daemon config/server-1.properties
+bin/kafka-server-stop.sh -daemon config/server-2.properties
+bin/kafka-server-stop.sh -daemon config/server-3.properties
 
 bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
 
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic oauth_login_history
+
+bin/kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic oauth_login_history
+
+bin/kafka-topics.sh --create --topic oauth_login_history --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+
+bin/kafka-topics.sh --create --topic chat_massage --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+bin/kafka-topics.sh --create --topic chat_notification --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+
+bin/kafka-topics.sh --delete --topic connect-configs --bootstrap-server localhost:9092
+bin/kafka-topics.sh --delete --topic connect-offsets --bootstrap-server localhost:9092
+bin/kafka-topics.sh --delete --topic connect-status --bootstrap-server localhost:9092
 bin/kafka-topics.sh --delete --topic __consumer_offsets --bootstrap-server localhost:9092
 bin/kafka-topics.sh --delete --topic _dek_registry_keys --bootstrap-server localhost:9092
 bin/kafka-topics.sh --delete --topic _schema_encoders --bootstrap-server localhost:9092
 bin/kafka-topics.sh --delete --topic _schemas --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test018 --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test018.mungmoMember.oauth_login --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test020 --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test020.mungmoMember.oauth_login --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test021 --bootstrap-server localhost:9092
-bin/kafka-topics.sh --delete --topic test021.mungmoMember.oauth_login --bootstrap-server localhost:9092
+bin/kafka-topics.sh --delete --bootstrap-server localhost:9092 --topic oauth_login_history
 
 connector 실행 : bin/connect-distributed ./etc/kafka/connect-distributed.properties
 registry  실행 : bin/schema-registry-start ./etc/schema-registry/schema-registry.properties
 registry consumer message : bin/kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic test005.mungmoMember.oauth_login --from-beginning --property schema.registry.url=http://localhost:8081 --property print.key=true
-
-
-WARN [Consumer clientId=console-consumer, groupId=console-consumer-43722] Error while fetching metadata with correlation id 2 : {test010.mungmoMember.oauth_login=LEADER_NOT_AVAILABLE} (org.apache.kafka.clients.NetworkClient)
-"auto.leader.rebalance.enable": "true",
-리더 생성 설정
-
-
-
-
-[2024-07-10 04:07:17,571] WARN [mysql-debezium-connector_oauth_login|task-0] [Producer clientId=connector-producer-mysql-debezium-connector_oauth_login-0] 
-Error while fetching metadata with correlation id 3 : {test018=LEADER_NOT_AVAILABLE} (org.apache.kafka.clients.NetworkClient:1145)
-[2024-07-10 04:07:17,716] WARN [mysql-debezium-connector_oauth_login|task-0] [Producer clientId=connector-producer-mysql-debezium-connector_oauth_login-0] 
-Error while fetching metadata with correlation id 7 : {test018.mungmoMember.oauth_login=LEADER_NOT_AVAILABLE} (org.apache.kafka.clients.NetworkClient:1145)
-
-[2024-07-10 04:09:00,917] ERROR [mysql-sink-connector_oauth_login_3|task-0] WorkerSinkTask{id=mysql-sink-connector_oauth_login_3-0} Task threw an uncaught and unrecoverable exception. Task is being killed and will not recover until manually restarted. Error: Cannot ALTER TABLE "oauth_login" to add missing field SinkRecordField{schema=Schema{io.debezium.connector.mysql.Source:STRUCT}, name='source', isPrimaryKey=false}, as the field is not optional and does not have a default value (org.apache.kafka.connect.runtime.WorkerSinkTask:616)
-io.confluent.connect.jdbc.sink.TableAlterOrCreateException: Cannot ALTER TABLE "oauth_login" to add missing field SinkRecordField{schema=Schema{io.debezium.connector.mysql.Source:STRUCT}, name='source', isPrimaryKey=false}, as the field is not optional and does not have a default value
-at io.confluent.connect.jdbc.sink.DbStructure.amendIfNecessary(DbStructure.java:182)
-at io.confluent.connect.jdbc.sink.DbStructure.createOrAmendIfNecessary(DbStructure.java:83)
-at io.confluent.connect.jdbc.sink.BufferedRecords.add(BufferedRecords.java:122)
-at io.confluent.connect.jdbc.sink.JdbcDbWriter.write(JdbcDbWriter.java:74)
-at io.confluent.connect.jdbc.sink.JdbcSinkTask.put(JdbcSinkTask.java:88)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.deliverMessages(WorkerSinkTask.java:587)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.poll(WorkerSinkTask.java:336)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:237)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
-at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:204)
-at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:259)
-at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:181)
-at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-at java.base/java.lang.Thread.run(Thread.java:840)
-[2024-07-10 04:09:00,918] ERROR [mysql-sink-connector_oauth_login_3|task-0] WorkerSinkTask{id=mysql-sink-connector_oauth_login_3-0} Task threw an uncaught and unrecoverable exception. Task is being killed and will not recover until manually restarted (org.apache.kafka.connect.runtime.WorkerTask:212)
-org.apache.kafka.connect.errors.ConnectException: Exiting WorkerSinkTask due to unrecoverable exception.
-at org.apache.kafka.connect.runtime.WorkerSinkTask.deliverMessages(WorkerSinkTask.java:618)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.poll(WorkerSinkTask.java:336)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:237)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:206)
-at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:204)
-at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:259)
-at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:181)
-at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: io.confluent.connect.jdbc.sink.TableAlterOrCreateException: Cannot ALTER TABLE "oauth_login" to add missing field SinkRecordField{schema=Schema{io.debezium.connector.mysql.Source:STRUCT}, name='source', isPrimaryKey=false}, as the field is not optional and does not have a default value
-at io.confluent.connect.jdbc.sink.DbStructure.amendIfNecessary(DbStructure.java:182)
-at io.confluent.connect.jdbc.sink.DbStructure.createOrAmendIfNecessary(DbStructure.java:83)
-at io.confluent.connect.jdbc.sink.BufferedRecords.add(BufferedRecords.java:122)
-at io.confluent.connect.jdbc.sink.JdbcDbWriter.write(JdbcDbWriter.java:74)
-at io.confluent.connect.jdbc.sink.JdbcSinkTask.put(JdbcSinkTask.java:88)
-at org.apache.kafka.connect.runtime.WorkerSinkTask.deliverMessages(WorkerSinkTask.java:587)
-... 11 more
-
-
-
-```json
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

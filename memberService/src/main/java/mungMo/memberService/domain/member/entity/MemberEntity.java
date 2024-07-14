@@ -53,8 +53,7 @@ public class MemberEntity {
 
     private LocalDateTime recent_date;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "town_id")
+    @OneToOne(mappedBy = "member")
     private TownEntity town;
 
     public void changeDogName(String dogName) {
@@ -73,11 +72,6 @@ public class MemberEntity {
         fileInfo = info;
     }
 
-    public MemberEntity setTown(TownEntity town){
-        this.town = town;
-        return this;
-    }
-
     public MemberEntity() {
     }
 
@@ -90,7 +84,6 @@ public class MemberEntity {
         this.ageRange = ageRange;
         this.memberAuthority = MemberAuthority.ROLE_MEMBER;
         this.oauthProvider = oAuthProvider;
-        this.town = town;
     }
 
     public MemberIdAndDogNameDTO changeToDogDTO() {
