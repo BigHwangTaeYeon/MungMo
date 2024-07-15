@@ -1,7 +1,7 @@
 package mungmo.mungmoChat.com.util;
 
 import lombok.extern.slf4j.Slf4j;
-import mungMo.memberService.com.exception.FileUploadException;
+import mungmo.mungmoChat.com.exception.FileUploadException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

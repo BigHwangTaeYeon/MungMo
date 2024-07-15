@@ -2,6 +2,7 @@ package mungmo.mungmoChat.domain.massage.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import mungmo.mungmoChat.domain.massage.dto.Notification;
 import mungmo.mungmoChat.otherDomain.member.entity.MemberEntity;
 
 @Entity
@@ -33,15 +34,19 @@ public class ChatNotification {
     public ChatNotification() {
     }
 
-    public ChatNotification(MemberEntity sender, Long recipientId, Long chatRoomId, String content) {
+    private ChatNotification(MemberEntity sender, Notification notification) {
         this.sender = sender;
-        this.recipientId = recipientId;
-        this.chatRoomId = chatRoomId;
-        this.content = content;
+        this.recipientId = notification.getRecipientId();
+        this.chatRoomId = notification.getChatRoomId();
+        this.content = notification.getContent();
         this.hasRead = false;
     }
 
     public void changeHasReadToTrue() {
         this.hasRead = true;
+    }
+
+    public static ChatNotification of(MemberEntity sender, Notification notification) {
+        return new ChatNotification(sender, notification);
     }
 }

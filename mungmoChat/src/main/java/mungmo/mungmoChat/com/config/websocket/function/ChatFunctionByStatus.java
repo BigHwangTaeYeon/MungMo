@@ -16,12 +16,19 @@ public abstract class ChatFunctionByStatus {
         this.chatRoomService = chatRoomService;
     }
 
+    public abstract void validation(StompHeaderAccessor accessor);
     public abstract void create(StompHeaderAccessor accessor);
     public abstract void delete(StompHeaderAccessor accessor);
 
     protected Long getUserId(StompHeaderAccessor accessor) {
         return Optional.of(accessor)
                 .map(acc -> Long.parseLong(acc.getNativeHeader("userId").get(0)))
+                .orElseThrow(IllegalAccessError::new);
+    }
+
+    protected Long getRoomNum(StompHeaderAccessor accessor) {
+        return Optional.ofNullable(accessor)
+                .map(acc -> Long.parseLong(acc.getNativeHeader("roomNum").get(0)))
                 .orElseThrow(IllegalAccessError::new);
     }
 }

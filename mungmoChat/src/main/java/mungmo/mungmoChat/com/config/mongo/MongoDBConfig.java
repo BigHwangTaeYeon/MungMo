@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "mungmo.mungmoChat.domain.chat.repository")
+@EnableMongoRepositories(basePackages = "mungmo.mungmoChat.domain")
 @EnableMongoAuditing
 public class MongoDBConfig {
 
@@ -22,6 +22,7 @@ public class MongoDBConfig {
 
     @Bean
     public MongoClient mongoClient() {
+        System.out.println("test");
         return MongoClients.create(mongoProperties.getClient());
     }
 

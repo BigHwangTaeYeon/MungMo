@@ -1,4 +1,0 @@
-package mungmo.mungmoChat.domain.massage.service;
-
-public class ChatRoomParticipantService {
-}
