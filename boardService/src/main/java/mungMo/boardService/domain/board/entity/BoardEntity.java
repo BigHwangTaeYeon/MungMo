@@ -2,11 +2,10 @@ package mungMo.boardService.domain.board.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.boardService.com.util.GetDate;
 import mungMo.boardService.domain.board.dto.BoardDTO;
-import mungMo.boardService.domain.board.embede.FileInfo;
+import mungMo.boardService.domain.embede.FileInfo;
 import mungMo.boardService.domain.board.dto.DogInfoDTO;
-import mungMo.boardService.domain.otherService.member.entity.MemberEntity;
+import mungMo.boardService.otherDomain.member.entity.MemberEntity;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -53,7 +52,7 @@ public class BoardEntity {
         this.title = boardDTO.getTitle();
         this.content = boardDTO.getContent();
         this.subject = boardDTO.getSubject();
-        this.createDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        this.createDate = LocalDateTime.now();
         if(Optional.ofNullable(boardDTO.getFile_path()).isPresent()) {
             fileInfo = new FileInfo(boardDTO.getOriginal_name(), boardDTO.getMask_name(), boardDTO.getFile_path(), boardDTO.getFile_type());
         } else {
@@ -70,7 +69,7 @@ public class BoardEntity {
         if(StringUtils.hasText(dto.getTitle())) this.title = dto.getTitle();
         if(StringUtils.hasText(dto.getContent())) this.content = dto.getContent();
         if(dto.getSubject() != null) this.subject = dto.getSubject();
-        this.updateDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        this.updateDate = LocalDateTime.now();
     }
 
     public DogInfoDTO changToDogInfoDTO() {

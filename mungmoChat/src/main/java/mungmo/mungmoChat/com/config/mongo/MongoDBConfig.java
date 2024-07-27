@@ -22,7 +22,6 @@ public class MongoDBConfig {
 
     @Bean
     public MongoClient mongoClient() {
-        System.out.println("test");
         return MongoClients.create(mongoProperties.getClient());
     }
 

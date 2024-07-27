@@ -1,10 +1,9 @@
 package mungmo.mungmoChat.domain.massage.service;
 
 import mungmo.mungmoChat.domain.massage.dto.Message;
-import mungmo.mungmoChat.domain.massage.dto.Notification;
+import mungmo.mungmoChat.otherDomain.Notification.dto.Notification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service

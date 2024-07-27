@@ -2,7 +2,6 @@ package mungMo.memberService.domain.town.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.member.entity.MemberEntity;
 
 import java.time.LocalDateTime;
@@ -31,16 +30,19 @@ public class TownEntity {
     public void certified(String area) {
         this.area = area;
         certification = true;
-        certificationDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        certificationDate = LocalDateTime.now();
     }
 
     public void expired() {
-        certification = true;
+        certification = false;
+    }
+
+    public TownEntity() {
     }
 
     public TownEntity(MemberEntity member) {
         certification = false;
         this.member = member;
-        certificationDate = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        certificationDate = LocalDateTime.now();
     }
 }

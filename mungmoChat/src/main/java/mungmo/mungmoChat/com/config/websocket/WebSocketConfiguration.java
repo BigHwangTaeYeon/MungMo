@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
-@EnableWebSocketMessageBroker // WebSocket을 활성화하고 메시지 브로커 사용가능
+@EnableWebSocketMessageBroker
 @Slf4j
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;

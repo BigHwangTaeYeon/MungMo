@@ -1,8 +1,7 @@
 package mungmo.mungmoChat.domain.room.service;
 
 import mungmo.mungmoChat.com.exception.NotFoundException;
-import mungmo.mungmoChat.domain.room.domain.MeetupRoom;
-import mungmo.mungmoChat.domain.room.domain.MeetupRoomParticipant;
+import mungmo.mungmoChat.domain.room.entity.MeetupRoom;
 import mungmo.mungmoChat.domain.room.repository.MeetupRoomRepository;
 import mungmo.mungmoChat.domain.room.dto.MeetupRoomDTO;
 import mungmo.mungmoChat.otherDomain.member.service.MemberService;
@@ -37,8 +36,8 @@ public class MeetupRoomService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public void createMeetup(MeetupRoomDTO chatRoom) {
-        MeetupRoom room = MeetupRoom.of(chatRoom, memberService.findMemberById(chatRoom.getOwner().getMemberId()));
+    public void createMeetup(MeetupRoomDTO chatRoom, long id) {
+        MeetupRoom room = MeetupRoom.of(chatRoom, memberService.findMemberById(id));
         roomRepository.save(room);
     }
 

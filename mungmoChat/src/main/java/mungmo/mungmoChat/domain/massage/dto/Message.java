@@ -14,6 +14,8 @@ public class Message implements Serializable {
 
     private Long senderId;
 
+    private String senderNickName;
+
     private String content;
 
     private LocalDateTime createdAt;

@@ -59,8 +59,8 @@ public class MeetupRoomController {
      * @return
      */
     @PostMapping(value = "/createMeetup")
-    public ResponseEntity<?> createMeetup(@RequestBody MeetupRoomDTO chatRoom){
-        chatRoomService.createMeetup(chatRoom);
+    public ResponseEntity<?> createMeetup(HttpServletRequest request, @RequestBody MeetupRoomDTO chatRoom){
+        chatRoomService.createMeetup(chatRoom, Long.parseLong(request.getHeader("userId")));
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 

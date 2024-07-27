@@ -2,8 +2,10 @@ package mungMo.memberService.domain.member.service;
 
 
 import mungMo.memberService.domain.member.dto.MemberTypeDTO;
+import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.entity.MemberTypeEntity;
 import mungMo.memberService.domain.member.repository.MemberTypeRepository;
+import mungMo.memberService.otherDomain.publicCode.entity.PublicCodeEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +47,9 @@ public class MemberTypeService {
                     .filter(entity -> code == entity.getPublicCode().getCode())
                     .forEach(MemberTypeEntity::useY);
         }
+    }
+
+    public void save(PublicCodeEntity pcEntity, MemberEntity member) {
+        memberTypeRepository.save(pcEntity.changeToMemberType(pcEntity, member));
     }
 }

@@ -3,10 +3,7 @@ package mungMo.memberService.domain.report.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
-import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
-import mungMo.memberService.domain.member.oauth.jwt.JwtTokenProvider;
 import mungMo.memberService.domain.report.dto.ReportDTO;
 import mungMo.memberService.domain.report.service.ReportService;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +13,23 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/v1")
 public class ReportController {
-    private final AuthTokensGenerator authTokensGenerator;
-    private final JwtTokenProvider jwtProvider;
     private final ReportService reportService;
 
-    public ReportController(AuthTokensGenerator authTokensGenerator, JwtTokenProvider jwtProvider, ReportService reportService) {
-        this.authTokensGenerator = authTokensGenerator;
-        this.jwtProvider = jwtProvider;
+    public ReportController(ReportService reportService) {
         this.reportService = reportService;
     }
 
-    @LoginCheckEssential
     @GetMapping("/reportList")
     public ResponseEntity<?> reportList(HttpServletRequest request) {
         return ResponseEntity.ok(
                 new Result<>(reportService.userReportList(
-                        authTokensGenerator.extractMemberId(jwtProvider.getAccessToken(request))
+                        Long.parseLong(request.getHeader("userId"))
                 ))
         );
     }
 
-    @LoginCheckEssential
     @GetMapping("/reportDetail/{id}")
-    public ResponseEntity<?> reportDetail(HttpServletRequest request, @PathVariable("id") long id) {
+    public ResponseEntity<?> reportDetail(@PathVariable("id") long id) {
         return ResponseEntity.ok(
                 new Result<>(reportService.reportDetail(id))
         );
@@ -46,11 +37,7 @@ public class ReportController {
 
     @PostMapping("/resisterReport")
     public ResponseEntity<?> resisterReport(HttpServletRequest request, ReportDTO reportDTO, MultipartFile file) {
-        try {
-            reportService.register(reportDTO.setFromId(authTokensGenerator.extractMemberIdToHeader(request)), file);
-        }catch (Exception e) {
-            System.out.println("exception : " + e.getMessage());
-        }
+        reportService.register(reportDTO.setFromId(Long.parseLong(request.getHeader("userId"))), file);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 

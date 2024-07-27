@@ -3,12 +3,15 @@ package mungMo.memberService.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import mungMo.memberService.com.util.GetDate;
+import lombok.Setter;
 import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.member.dto.DogImgDTO;
 import mungMo.memberService.domain.member.dto.MemberDTO;
 import mungMo.memberService.domain.member.dto.MemberIdAndDogNameDTO;
+import mungMo.memberService.domain.member.entity.function.DIMannerTemperature;
+import mungMo.memberService.domain.member.fcm.domain.FcmToken;
 import mungMo.memberService.domain.town.entity.TownEntity;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +34,8 @@ public class MemberEntity {
     private String dogLike;
 
     @Column(name = "manner_temperature", nullable = false)
+    @ColumnDefault("30")
+    @Setter
     private int mannerTemperature;
 
     @Column(nullable = false)
@@ -46,6 +51,9 @@ public class MemberEntity {
     @Column(name = "oauthprovider")
     private SocialRoute oauthProvider;
 
+    @OneToOne
+    private FcmToken fcmToken;
+
     @Embedded
     private FileInfo fileInfo;
 
@@ -56,6 +64,13 @@ public class MemberEntity {
     @OneToOne(mappedBy = "member")
     private TownEntity town;
 
+    @Transient  // 데이터베이스에 저장할 필요 없음
+    private DIMannerTemperature diMannerTemperature;
+
+    public MemberEntity(DIMannerTemperature diMannerTemperature) {
+        this.diMannerTemperature = diMannerTemperature;
+    }
+
     public void changeDogName(String dogName) {
         this.dogName = dogName;
     }
@@ -65,7 +80,7 @@ public class MemberEntity {
     }
 
     public void updateRecentDate() {
-        recent_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        recent_date = LocalDateTime.now();
     }
 
     public void fileInfoInstance(FileInfo info) {
@@ -77,7 +92,7 @@ public class MemberEntity {
 
     @Builder
     public MemberEntity(String email, String gender, String ageRange, SocialRoute oAuthProvider, TownEntity town) {
-        create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        create_date = LocalDateTime.now();
         this.mannerTemperature = 30;
         this.email = email;
         this.gender = gender;
@@ -113,5 +128,17 @@ public class MemberEntity {
                 .mask_name(fileInfo.getMask_name())
                 .file_type(fileInfo.getFile_type())
                 .build();
+    }
+
+    public void comeFromReport(String problem) {
+        diMannerTemperature.mtfFactory(this).comeFromReport(problem);
+    }
+
+    public void comeFromReview(int point) {
+        diMannerTemperature.mtfFactory(this).comeFromReview(point);
+    }
+
+    public void comeFromNoShow() {
+        diMannerTemperature.mtfFactory(this).comeFromNoShow();
     }
 }

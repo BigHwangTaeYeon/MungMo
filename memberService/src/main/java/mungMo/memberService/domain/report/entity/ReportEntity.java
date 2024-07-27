@@ -1,7 +1,6 @@
 package mungMo.memberService.domain.report.entity;
 
 import jakarta.persistence.*;
-import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.embede.FileInfo;
 import mungMo.memberService.domain.report.dto.ReportDTO;
 import org.springframework.util.StringUtils;
@@ -50,7 +49,7 @@ public class ReportEntity {
         fromMemberId = dto.getFromId();
         toMemberId = dto.getToId();
         status = false;
-        create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        create_date = LocalDateTime.now();
         if(StringUtils.hasText(dto.getFile_path())) fileInfo = new FileInfo(dto.getOriginal_name(), dto.getMask_name(), dto.getFile_path(), dto.getFile_type());
     }
 

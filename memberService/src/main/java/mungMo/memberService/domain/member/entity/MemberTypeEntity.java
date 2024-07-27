@@ -2,9 +2,8 @@ package mungMo.memberService.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.memberService.com.util.GetDate;
 import mungMo.memberService.domain.member.dto.MemberTypeDTO;
-import mungMo.memberService.domain.otherService.publicCode.entity.PublicCodeEntity;
+import mungMo.memberService.otherDomain.publicCode.entity.PublicCodeEntity;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +41,7 @@ public class MemberTypeEntity {
         this.publicCode = publicCode;
         this.use = false;
         this.member = member;
-        this.update_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        this.update_date = LocalDateTime.now();
     }
 
     public MemberTypeDTO changeToDTO() {

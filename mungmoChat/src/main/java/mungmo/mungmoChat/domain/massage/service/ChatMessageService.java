@@ -14,6 +14,6 @@ public class ChatMessageService {
     }
 
     public void saveMessage(Message message) {
-        chatMessageRepository.save(new ChatMessage(message));
+        chatMessageRepository.save(ChatMessage.from(message));
     }
 }

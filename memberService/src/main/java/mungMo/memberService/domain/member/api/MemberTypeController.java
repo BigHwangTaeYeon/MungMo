@@ -2,9 +2,7 @@ package mungMo.memberService.domain.member.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
-import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.service.MemberTypeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1")
 public class MemberTypeController {
-    private final AuthTokensGenerator authTokensGenerator;
     private final MemberTypeService memberTypeService;
 
-    public MemberTypeController(AuthTokensGenerator authTokensGenerator, MemberTypeService memberTypeService) {
-        this.authTokensGenerator = authTokensGenerator;
+    public MemberTypeController(MemberTypeService memberTypeService) {
         this.memberTypeService = memberTypeService;
     }
 
@@ -27,11 +23,10 @@ public class MemberTypeController {
      * @param request
      * @return
      */
-    @LoginCheckEssential
     @GetMapping("/userTypeList")
     public ResponseEntity<?> userTypeList(HttpServletRequest request) {
         return ResponseEntity.ok(
-                new Result<>(memberTypeService.userTypeList(authTokensGenerator.extractMemberIdToHeader(request)))
+                new Result<>(memberTypeService.userTypeList(Long.parseLong(request.getHeader("userId"))))
         );
     }
 
@@ -41,10 +36,9 @@ public class MemberTypeController {
      * @param code
      * @return
      */
-    @LoginCheckEssential
     @PatchMapping("/userTypeResister")
     public ResponseEntity<?> userTypeResister(HttpServletRequest request, @RequestParam List<Integer> code) {
-        memberTypeService.userTypeResister(authTokensGenerator.extractMemberIdToHeader(request), code);
+        memberTypeService.userTypeResister(Long.parseLong(request.getHeader("userId")), code);
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 
@@ -54,10 +48,9 @@ public class MemberTypeController {
      * @param code
      * @return
      */
-    @LoginCheckEssential
     @PatchMapping("/dogTypeResister")
     public ResponseEntity<?> dogTypeResister(HttpServletRequest request, @RequestParam List<Integer> code) {
-        memberTypeService.dogTypeResister(authTokensGenerator.extractMemberIdToHeader(request), code);
+        memberTypeService.dogTypeResister(Long.parseLong(request.getHeader("userId")), code);
         return ResponseEntity.ok(ResponseMessage.OK.getMessage());
     }
 

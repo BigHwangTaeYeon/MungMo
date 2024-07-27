@@ -1,28 +1,34 @@
 package mungMo.memberService.domain.town.service;
 
 import mungMo.memberService.domain.member.entity.MemberEntity;
-import mungMo.memberService.domain.member.repository.MemberRepository;
+import mungMo.memberService.domain.member.service.MemberApiService;
+import mungMo.memberService.domain.town.entity.TownEntity;
 import mungMo.memberService.domain.town.repository.TownRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TownService {
-    private final MemberRepository memberRepository;
+    private final MemberApiService memberService;
     private final TownRepository townRepository;
 
-    public TownService(MemberRepository memberRepository, TownRepository townRepository) {
-        this.memberRepository = memberRepository;
+    public TownService(MemberApiService memberService, TownRepository townRepository) {
+        this.memberService = memberService;
         this.townRepository = townRepository;
     }
 
+    @Transactional
     public void register(String area, Long id) {
-        memberRepository.findById(id)
-                .map(MemberEntity::getTown)
-                .ifPresent(town ->
-                        {
-                            town.certified(area);
-                            townRepository.save(town);
-                        }
-                );
+        memberService.findEntityById(id).getTown().certified(area);
+    }
+
+    @Transactional(readOnly = true)
+    public void cancelCertification(Long id) {
+        townRepository.findById(id).ifPresent(TownEntity::expired);
+    }
+
+    @Transactional
+    public void saveMemberEntity(MemberEntity member) {
+        townRepository.save(new TownEntity(member));
     }
 }

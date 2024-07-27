@@ -30,6 +30,17 @@ public class MeetupRoomParticipantController {
     }
 
     /**
+     * for adminService
+     * 채팅중이지 않은 사람
+     * @param chatRoom
+     * @return
+     */
+    @GetMapping(value = "/chatNonParticipants/{chatRoomId}")
+    public ResponseEntity<?> chatNonParticipants(@PathVariable(name = "chatRoomId") Long chatRoomId){
+        return ResponseEntity.ok(participantService.chatNonParticipants(chatRoomId));
+    }
+
+    /**
      * 번개 참여
      * @param participantDTO
      * @return

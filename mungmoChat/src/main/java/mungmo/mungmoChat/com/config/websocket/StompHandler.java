@@ -3,8 +3,10 @@ package mungmo.mungmoChat.com.config.websocket;
 import lombok.extern.slf4j.Slf4j;
 import mungmo.mungmoChat.com.config.websocket.function.ChatFunctionByStatus;
 import mungmo.mungmoChat.com.config.websocket.function.ParticipantFunction;
-import mungmo.mungmoChat.domain.room.service.ChatRoomParticipantService;
-import mungmo.mungmoChat.domain.room.service.ChatRoomService;
+import mungmo.mungmoChat.com.exception.NotFoundException;
+import mungmo.mungmoChat.domain.room.service.MeetupRoomParticipantService;
+import mungmo.mungmoChat.domain.room.service.MeetupRoomService;
+import mungmo.mungmoChat.otherDomain.Notification.service.ChatNotificationServiceClient;
 import mungmo.mungmoChat.otherDomain.member.service.MemberService;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -13,23 +15,22 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-import java.util.Optional;
-
 @Component
 @Slf4j
 public class StompHandler implements ChannelInterceptor { // WebSocket을 이용한 채팅 기능에서 메시지를 가공하고 처리하는 역할
 
     private final MemberService memberService;
-    private final ChatRoomService chatRoomService;
-    private final ChatRoomParticipantService chatRoomParticipantService;
+    private final MeetupRoomService meetupRoomService;
+    private final MeetupRoomParticipantService participantService;
+    private final ChatNotificationServiceClient notificationServiceClient;
 
     private ChatFunctionByStatus function;
 
-    public StompHandler(MemberService memberService, ChatRoomService chatRoomService, ChatRoomParticipantService chatRoomParticipantService) {
+    public StompHandler(MemberService memberService, MeetupRoomService meetupRoomService, MeetupRoomParticipantService participantService, ChatNotificationServiceClient notificationServiceClient) {
         this.memberService = memberService;
-        this.chatRoomService = chatRoomService;
-        this.chatRoomParticipantService = chatRoomParticipantService;
+        this.meetupRoomService = meetupRoomService;
+        this.participantService = participantService;
+        this.notificationServiceClient = notificationServiceClient;
     }
 
     @Override
@@ -39,16 +40,20 @@ public class StompHandler implements ChannelInterceptor { // WebSocket을 이용
         System.out.println("preSend");
         // CONNECT, SUBSCRIBE, SEND, DISCONNECT
         if (stompCommand != null) {
-            handleStompCommand(stompCommand, accessor);
+            try {
+                handleStompCommand(stompCommand, accessor);
+            } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
         return ChannelInterceptor.super.preSend(message, channel);
     }
 
-    private void handleStompCommand(StompCommand stompCommand, StompHeaderAccessor accessor) {
+    private void handleStompCommand(StompCommand stompCommand, StompHeaderAccessor accessor) throws NotFoundException {
         switch (stompCommand) {
             case CONNECT:
                 System.out.println("CONNECT");
-                function = new ParticipantFunction(memberService, chatRoomService, chatRoomParticipantService);
+                function = new ParticipantFunction(memberService, meetupRoomService, participantService, notificationServiceClient);
                 handleConnect(accessor);
                 break;
             case SUBSCRIBE:
@@ -61,7 +66,7 @@ public class StompHandler implements ChannelInterceptor { // WebSocket을 이용
                 break;
             case DISCONNECT:
                 System.out.println("DISCONNECT");
-                function = new ParticipantFunction(memberService, chatRoomService, chatRoomParticipantService);
+                function = new ParticipantFunction(memberService, meetupRoomService, participantService, notificationServiceClient);
                 handleDisconnect(accessor);
                 break;
             case ERROR:
@@ -72,9 +77,11 @@ public class StompHandler implements ChannelInterceptor { // WebSocket을 이용
     }
 
 
-    private void handleConnect(StompHeaderAccessor accessor) {
+    private void handleConnect(StompHeaderAccessor accessor) throws NotFoundException {
+        // 모임에 참여자 존재 여부 확인
         function.validation(accessor);
-        function.create(accessor);
+        // 모임 참여자 채팅 참여
+        function.join(accessor);
     }
 
     private void handleSubscribe(StompHeaderAccessor accessor) {
@@ -98,7 +105,7 @@ public class StompHandler implements ChannelInterceptor { // WebSocket을 이용
 
     private void handleChatRoomUnsubscription(StompHeaderAccessor accessor) {
         System.out.println("채팅방 UNSUBSCRIBE");
-        function.validation(accessor);
-        function.delete(accessor);
+//        function.validation(accessor);
+        function.exit(accessor);
     }
 }

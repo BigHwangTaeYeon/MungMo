@@ -6,10 +6,9 @@ import mungMo.boardService.com.util.Upload;
 import mungMo.boardService.domain.board.dto.BoardDTO;
 import mungMo.boardService.domain.board.dto.DogBoardDTO;
 import mungMo.boardService.domain.board.dto.PageDTO;
-import mungMo.boardService.domain.board.embede.FileInfo;
 import mungMo.boardService.domain.board.entity.BoardEntity;
 import mungMo.boardService.domain.board.repository.BoardRepository;
-import mungMo.boardService.domain.otherService.member.repository.MemberRepository;
+import mungMo.boardService.otherDomain.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,19 +19,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Value("${api.upload.dir.board}")
     private String uploadDir;
 
-    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository) {
+    public BoardService(BoardRepository boardRepository, MemberService memberService) {
         this.boardRepository = boardRepository;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     public List<DogBoardDTO> boardList(PageDTO pageDTO) {
@@ -66,11 +64,11 @@ public class BoardService {
         if(file.isPresent()) {
             boardRepository.save(BoardEntity.of(
                     dto.setFile(new Upload(uploadDir, file.get()).uploadImage()),
-                    memberRepository.findById(userId).orElseThrow(NotFoundException::new)
+                    memberService.findEntityById(userId)
             ));
         } else {
             boardRepository.save(BoardEntity.of(
-                    dto, memberRepository.findById(userId).orElseThrow(NotFoundException::new)
+                    dto, memberService.findEntityById(userId)
             ));
         }
     }

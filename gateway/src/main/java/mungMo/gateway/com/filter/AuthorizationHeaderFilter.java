@@ -50,12 +50,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             // JWT 토큰 유효성 검사 & id 추출하여 HTTP 요청 헤더에 추가하여 전달
             String subject = jwtUtil.extractSubject(accessToken);
 
-            // logout 처리된 accessToken
-//            if (redisUtil.get(accessToken) != null && redisUtil.get(accessToken).equals("logout")) {
-//                log.info("[*] Logout accessToken");
-//                return onError(exchange, "로그아웃된 토큰입니다.", HttpStatus.UNAUTHORIZED);
-//            }
-
             // 사용자 email를 HTTP 요청 헤더에 추가하여 전달
             ServerHttpRequest newRequest = request.mutate()
                     .header("userId", subject)

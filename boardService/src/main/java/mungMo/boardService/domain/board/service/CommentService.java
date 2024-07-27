@@ -1,16 +1,11 @@
 package mungMo.boardService.domain.board.service;
 
-import mungMo.boardService.com.response.exception.FileUploadException;
 import mungMo.boardService.com.response.exception.NotFoundException;
-import mungMo.boardService.com.util.Upload;
-import mungMo.boardService.domain.board.dto.CommentDTO;
-import mungMo.boardService.domain.board.entity.BoardEntity;
 import mungMo.boardService.domain.board.entity.CommentEntity;
 import mungMo.boardService.domain.board.repository.BoardRepository;
 import mungMo.boardService.domain.board.repository.CommentRepository;
-import mungMo.boardService.domain.otherService.member.repository.MemberRepository;
+import mungMo.boardService.otherDomain.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 

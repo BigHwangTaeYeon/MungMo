@@ -2,8 +2,7 @@ package mungMo.boardService.domain.board.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import mungMo.boardService.com.util.GetDate;
-import mungMo.boardService.domain.otherService.member.entity.MemberEntity;
+import mungMo.boardService.otherDomain.member.entity.MemberEntity;
 
 import java.time.LocalDateTime;
 
@@ -28,14 +27,14 @@ public class CommentEntity {
 
     public void modify(String comment) {
         this.comment = comment;
-        this.update_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        this.update_date = LocalDateTime.now();
     }
 
     public CommentEntity(String comment, BoardEntity board, MemberEntity member) {
         this.comment = comment;
         this.board = board;
         this.writer = member;
-        this.create_date = GetDate.pareLocalDataTime("yyyyMMddHHmmss");
+        this.create_date = LocalDateTime.now();
     }
 
     public static CommentEntity of(String comment, BoardEntity board, MemberEntity member) {

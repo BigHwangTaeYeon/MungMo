@@ -3,7 +3,6 @@ package mungmo.mungmoChat.otherDomain.member.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import mungmo.mungmoChat.otherDomain.member.entity.MemberEntity;
 
 @Getter
 @Setter
@@ -17,4 +16,7 @@ public class MemberDTO {
     private String ageRange;
     private int mannerTemperature;
     private boolean townCertificated;
+    private String dogImgName;
+    private String dogImgUrl;
+    private FcmTokenDTO fcmTokenDTO;
 }

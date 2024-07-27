@@ -2,12 +2,10 @@ package mungMo.memberService.domain.member.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import mungMo.memberService.com.annotation.LoginCheckEssential;
 import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
-import mungMo.memberService.domain.member.oauth.jwt.AuthTokensGenerator;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,43 +16,38 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/v1")
 public class MemberApiController {
     private final MemberApiService memberApiService;
-    private final AuthTokensGenerator authTokensGenerator;
 
-    public MemberApiController(MemberApiService memberApiService, AuthTokensGenerator authTokensGenerator) {
+    public MemberApiController(MemberApiService memberApiService) {
         this.memberApiService = memberApiService;
-        this.authTokensGenerator = authTokensGenerator;
     }
 
     /*
      * 토큰으로 정보 가져오기
      */
-    @LoginCheckEssential
     @GetMapping("/memberInfo")
     public ResponseEntity<?> myInfo(HttpServletRequest request) throws PreconditionFailedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.infoById(authTokensGenerator.extractMemberIdToHeader(request)))
+                new Result<>(memberApiService.infoById(Long.parseLong(request.getHeader("userId"))))
         );
     }
 
     /*
      * id로 정보 가져오기
      */
-    @LoginCheckEssential
-    @GetMapping("/memberInfo/{id}")
-    public ResponseEntity<?> yourInfo(HttpServletRequest request, @PathVariable("id") Long id) throws PreconditionFailedException {
+    @GetMapping("/feignClient/memberInfo/{id}")
+    public ResponseEntity<?> yourInfo(@PathVariable("id") Long id) throws PreconditionFailedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.infoById(id))
+                memberApiService.infoById(id)
         );
     }
 
     /*
      * id로 정보 가져오기
      */
-    @LoginCheckEssential
     @GetMapping("/dogImg")
     public ResponseEntity<?> dogImg(HttpServletRequest request) throws PreconditionFailedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.dogImg(authTokensGenerator.extractMemberIdToHeader(request)))
+                new Result<>(memberApiService.dogImg(Long.parseLong(request.getHeader("userId"))))
         );
     }
 
@@ -64,11 +57,10 @@ public class MemberApiController {
      * @return dogName, id
      * @throws UnauthorizedException
      */
-    @LoginCheckEssential
     @GetMapping("/dogName")
     public ResponseEntity<?> dogName(HttpServletRequest request) throws UnauthorizedException {
         return ResponseEntity.ok(
-                new Result<>(memberApiService.dogName(authTokensGenerator.extractMemberIdToHeader(request)))
+                new Result<>(memberApiService.dogName(Long.parseLong(request.getHeader("userId"))))
         );
     }
 
@@ -78,30 +70,63 @@ public class MemberApiController {
      * @param like
      * @return
      */
-    @LoginCheckEssential
     @PatchMapping("/dogLike")
     public ResponseEntity<?> dogLike(HttpServletRequest request, @RequestParam("like") String like) {
-        memberApiService.dogLike(authTokensGenerator.extractMemberIdToHeader(request), like);
+        memberApiService.dogLike(Long.parseLong(request.getHeader("userId")), like);
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
     /*
      * 닉네임 등록
      */
-    @LoginCheckEssential
     @PatchMapping("/registerNickname")
     public ResponseEntity<?> regiNickname(HttpServletRequest request, @RequestParam("nickName") String nickName) throws ValidationException {
-        memberApiService.registerNickname(nickName, authTokensGenerator.extractMemberIdToHeader(request));
+        memberApiService.registerNickname(nickName, Long.parseLong(request.getHeader("userId")));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 
     /*
      * 강아지 사진 업로드
      */
-    @LoginCheckEssential
     @PostMapping("/updateDogImg")
     public ResponseEntity<?> updateDogImg(HttpServletRequest request, MultipartFile file){
-        memberApiService.updateDogImg(authTokensGenerator.extractMemberIdToHeader(request), file);
+        memberApiService.updateDogImg(Long.parseLong(request.getHeader("userId")), file);
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
+    }
+
+    /*
+     * Firebase Cloud Messaging
+     */
+    @PatchMapping("/registerFcm")
+    public ResponseEntity<?> registerFcm(HttpServletRequest request, @RequestParam("fcmToken") String fcmToken) {
+        memberApiService.registerFcm(fcmToken, Long.parseLong(request.getHeader("userId")));
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
+    }
+
+    /*
+     * MannerTemperature come from reason
+     */
+    @PatchMapping("/comeFromReport")
+    public ResponseEntity<?> comeFromReport(HttpServletRequest request, @RequestParam("reason") String reason) {
+        memberApiService.comeFromReport(reason, Long.parseLong(request.getHeader("userId")));
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
+    }
+
+    /*
+     * MannerTemperature come from point
+     */
+    @PatchMapping("/comeFromReview")
+    public ResponseEntity<?> comeFromReview(HttpServletRequest request, @RequestParam("point") int point) {
+        memberApiService.comeFromReview(point, Long.parseLong(request.getHeader("userId")));
+        return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
+    }
+
+    /*
+     * MannerTemperature come from no show
+     */
+    @PatchMapping("/comeFromNoShow")
+    public ResponseEntity<?> comeFromNoShow(HttpServletRequest request) {
+        memberApiService.comeFromNoShow(Long.parseLong(request.getHeader("userId")));
         return ResponseEntity.ok(ResponseMessage.valueOfCode("Ok").getMessage());
     }
 

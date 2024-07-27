@@ -2,8 +2,10 @@ package mungmo.mungmoChat.otherDomain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import mungmo.mungmoChat.domain.embede.FileInfo;
+import mungmo.mungmoChat.otherDomain.member.dto.FcmTokenDTO;
 import mungmo.mungmoChat.otherDomain.member.dto.MemberDTO;
-import org.apache.tomcat.jni.FileInfo;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -38,6 +40,13 @@ public class MemberEntity {
     @Column(name = "memberauthority")
     private MemberAuthority memberAuthority;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "oauthprovider")
+    private SocialRoute oauthProvider;
+
+    @OneToOne
+    private FcmToken fcmToken;
+
     @Embedded
     private FileInfo fileInfo;
 
@@ -57,6 +66,13 @@ public class MemberEntity {
                 .gender(gender)
                 .ageRange(ageRange)
                 .mannerTemperature(mannerTemperature)
+                .dogImgName(fileInfo.getMask_name())
+                .dogImgUrl(fileInfo.getFile_path())
+                .fcmTokenDTO(
+                        StringUtils.hasText(fcmToken.getFcmToken())
+                                ? new FcmTokenDTO(fcmToken.getFcmToken())
+                                : new FcmTokenDTO()
+                )
                 .build();
     }
 }

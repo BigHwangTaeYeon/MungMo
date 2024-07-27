@@ -37,6 +37,7 @@ public class ReportService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Transactional(readOnly = true)
     public ReportDTO reportDetail(long id) {
         return reportRepository.findById(id)
                 .map(ReportEntity::changeToDTO)
