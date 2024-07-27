@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+fireBase.json
 security
 kafka_2.13-3.7.0.tgz
 
