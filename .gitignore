@@ -4,3 +4,4 @@ security
 kafka_2.13-3.7.0
 confluent-7.5.0
 confluentinc-kafka-connect-jdbc-10.6.4
+keytool/
