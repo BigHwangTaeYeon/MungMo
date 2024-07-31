@@ -1,5 +1,7 @@
 README
 
+API 명세서 : https://documenter.getpostman.com/view/26372368/2sA3XQhN8y
+
 # MungMo
 
 Restful API 구현<br>
