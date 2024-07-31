@@ -16,6 +16,10 @@ spring:
     import:
       - classpath:/yml/kafka.yml
       - classpath:/yml/logging.yml
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888 #config 서버가 돌아가는 주소
+      name: chat-application #repo에 있는 파일이름
   jpa:
     show-sql: true
     hibernate:
@@ -26,14 +30,6 @@ spring:
         format_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQLDialect
-  datasource:
-    url: jdbc:mysql://localhost:3306/mungmochat?useUnicode=true&characterEncoding=utf8
-    username: mungmo
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/testdb
 
 eureka:
   instance:

@@ -15,10 +15,10 @@ eureka:
 spring:
   application:
     name: apigateway-service
-  config:
-    import:
-      - classpath:/yml/jwt.yml
   cloud:
+    config:
+      uri: http://127.0.0.1:8888 #config 서버가 돌아가는 주소
+      name: gateway-application #repo에 있는 파일이름
     gateway:
       default-filters:
         - name: GlobalFilter

@@ -37,6 +37,7 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	// Feign Client, REST call 을 추상화 한 spring cloud netfilx 라이브러리
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	// kafka
@@ -45,6 +46,9 @@ dependencies {
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 	// mongodb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// spring cloud config
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 }
 
 dependencyManagement {

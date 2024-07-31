@@ -24,9 +24,6 @@ public class ResponseMessageAOP {
     public ResponseEntity<?> allController(ProceedingJoinPoint jp) throws Throwable {
         try {
             Object proceed = jp.proceed();
-
-            System.out.println("test aop : " + jp.getArgs().getClass().getSimpleName());
-
             return ResponseEntity.ok(proceed);
         }
         catch(FileUploadException | NullPointerException | IllegalArgumentException e){

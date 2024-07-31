@@ -6,6 +6,8 @@ import mungMo.memberService.com.config.ResponseMessage;
 import mungMo.memberService.com.exception.PreconditionFailedException;
 import mungMo.memberService.com.exception.UnauthorizedException;
 import mungMo.memberService.com.exception.ValidationException;
+import mungMo.memberService.domain.member.dto.MemberDTO;
+import mungMo.memberService.domain.member.entity.MemberEntity;
 import mungMo.memberService.domain.member.service.MemberApiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +37,9 @@ public class MemberApiController {
      * id로 정보 가져오기
      */
     @GetMapping("/feignClient/memberInfo/{id}")
-    public ResponseEntity<?> yourInfo(@PathVariable("id") Long id) throws PreconditionFailedException {
+    public ResponseEntity<MemberDTO> yourInfo(@PathVariable("id") Long id) {
         return ResponseEntity.ok(
-                memberApiService.infoById(id)
+                memberApiService.findEntityById1(id)
         );
     }
 

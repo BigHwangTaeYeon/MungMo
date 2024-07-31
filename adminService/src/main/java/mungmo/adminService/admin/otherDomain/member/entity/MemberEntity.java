@@ -83,13 +83,14 @@ public class MemberEntity {
                 .gender(gender)
                 .ageRange(ageRange)
                 .mannerTemperature(mannerTemperature)
-                .dogImgName(fileInfo.getMask_name())
-                .dogImgUrl(fileInfo.getFile_path())
-                .fcmTokenDTO(
-                        StringUtils.hasText(fcmToken.getFcmToken())
-                                ? new FcmTokenDTO(fcmToken.getFcmToken())
-                                : new FcmTokenDTO()
-                )
+                .authority(memberAuthority)
+//                .dogImgName(fileInfo.getMask_name())
+//                .dogImgUrl(fileInfo.getFile_path())
+//                .fcmTokenDTO(
+//                        StringUtils.hasText(fcmToken.getFcmToken())
+//                                ? new FcmTokenDTO(fcmToken.getFcmToken())
+//                                : new FcmTokenDTO()
+//                )
                 .build();
     }
 }

@@ -118,6 +118,7 @@ public class MemberEntity {
                 .ageRange(ageRange)
                 .mannerTemperature(mannerTemperature)
                 .townCertificated(town.isCertification())
+                .authority(memberAuthority)
                 .build();
     }
 

@@ -87,3 +87,7 @@ $ keytool -export -alias mungmoEncryptionKey -keystore mungmoEncryptionKey.jks -
 $ keytool -import -alias trustServer -file ./trustServer.cer -keystore publickey.jks
 ```
 
+### 암호화
+
+POST curl localhost:8888/encrypt -d mysecretvalue
+자동으로 엔드포인트 설정되어 text 보내면 암호화 되어 반환된다.

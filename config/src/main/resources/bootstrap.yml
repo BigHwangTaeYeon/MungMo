@@ -1,0 +1,6 @@
+
+encrypt:
+  key-store:
+    location: file:///${user.home}/Documents/workspace/MungMo/keytool/mungmoEncryptionKey.jks
+    password: mungmo
+    alias: mungmoEncryptionKey

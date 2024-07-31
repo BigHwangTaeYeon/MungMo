@@ -10,24 +10,20 @@ redis:
   port: 6379
 
 spring:
+  application:
+    name: user-application
   config:
-#      activate:
-#        on-profile: dev
     import:
       - classpath:/yml/file.yml
       - classpath:/yml/kafka.yml
       - classpath:/yml/logging.yml
-      - classpath:/yml/oauth_secret.yml
-  application:
-    name: user-application
-  datasource:
-    url: jdbc:mysql://localhost:3306/mungmomember?useUnicode=true&characterEncoding=utf8
-    username: mungmo
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888 #config 서버가 돌아가는 주소
+      name: user-application #repo에 있는 파일이름
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         globally_quoted_identifiers: true

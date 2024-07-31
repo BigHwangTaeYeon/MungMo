@@ -32,6 +32,11 @@ public class MemberApiService {
     }
 
     @Transactional(readOnly = true)
+    public MemberDTO findEntityById1(Long id) {
+        return memberRepository.findById(id).orElseThrow().changeToDTO();
+    }
+
+    @Transactional(readOnly = true)
     public MemberEntity findEntityById(Long id) {
         return memberRepository.findById(id).orElseThrow();
     }

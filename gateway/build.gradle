@@ -40,6 +40,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// Feign Client, REST call 을 추상화 한 spring cloud netfilx 라이브러리
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// spring cloud config
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 }
 
 dependencyManagement {

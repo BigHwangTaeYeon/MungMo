@@ -1,10 +1,15 @@
 package mungmo.adminService.admin.otherDomain.member.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import mungmo.adminService.admin.com.filter.ObjectConverter;
 import mungmo.adminService.admin.otherDomain.member.dto.MemberDTO;
 import mungmo.adminService.admin.otherDomain.member.entity.MemberEntity;
 import mungmo.adminService.admin.otherDomain.member.repository.MemberRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 public class MemberService {
@@ -23,6 +28,12 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberDTO getMemberByFeignClient(Long userId) {
-        return memberServiceClient.getMember(userId).changeToDTO();
+        ResponseEntity<?> feignMember = memberServiceClient.getMember(userId);
+//        ObjectMapper mapper = new ObjectMapper();
+
+//        ObjectConverter converter = new ObjectConverter();
+        return ObjectConverter.operating(feignMember, MemberDTO.class);
+
+//        return mapper.convertValue(ObjectConverter.jsonBody(feignMember), MemberDTO.class);
     }
 }
