@@ -36,7 +36,7 @@ spring:
         - id: kakao-signup
           uri: lb://user-application
           predicates:
-            - Path=/member-service/*/kakao
+            - Path=/member-service/*/member/kakao
             - Method=GET
           filters:
             - name: CustomFilter
@@ -46,7 +46,7 @@ spring:
         - id: naver-signup
           uri: lb://user-application
           predicates:
-            - Path=/member-service/*/naver
+            - Path=/member-service/*/member/naver
             - Method=GET
           filters:
             - name: CustomFilter
@@ -56,7 +56,7 @@ spring:
         - id: findId
           uri: lb://user-application
           predicates:
-            - Path=/member-service/*/feignClient/memberInfo/**
+            - Path=/member-service/*/feignClient/**
             - Method=GET
           filters:
             - name: CustomFilter
@@ -69,13 +69,6 @@ spring:
             - Path=/member-service/**
           filters:
             - name: AuthorizationHeaderFilter # jwt token 검증 및 Long id 로 변환
-
-        - id: board-login
-          uri: lb://board-application
-          predicates:
-            - Path=/board-service/*/auth/**
-          filters:
-            - name: AuthorizationHeaderFilter
 
         - id: board
           uri: lb://board-application

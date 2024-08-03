@@ -1,11 +1,11 @@
-[최종-connector-설정](#최종-connector-설정)
-[mysql-설정](#mysql-설정)
-[kafka](#kafka)
-[debezium](#debezium)
-[avro](#avro)
-[connect-설정](#connect-설정)
-[source-connect](#source-connect)
-[sink-connect](#sink-connect)
+[최종-connector-설정](#최종-connector-설정)<br>
+[mysql-설정](#mysql-설정)<br>
+[kafka](#kafka)<br>
+[debezium](#debezium)<br>
+[avro](#avro)<br>
+[connect-설정](#connect-설정)<br>
+[source-connect](#source-connect)<br>
+[sink-connect](#sink-connect)<br>
 
 환경 java 17, mysql 8.3
 kafka_2.13-3.7.0
