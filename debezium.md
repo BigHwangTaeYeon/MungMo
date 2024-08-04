@@ -7,10 +7,12 @@
 [source-connect](#source-connect)<br>
 [sink-connect](#sink-connect)<br>
 
+```text
 환경 java 17, mysql 8.3
 kafka_2.13-3.7.0
 connect : http://packages.confluent.io/archive/7.5/confluent-community-7.5.0.tar.gz
 connector : https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-jdbc/versions/10.6.4/confluentinc-kafka-connect-jdbc-10.6.4.zip
+```
 
 ### 최종 connector 설정
 ```json
