@@ -5,12 +5,11 @@ import mungmo.board.com.response.exception.FileUploadException;
 import mungmo.board.com.response.exception.NotFoundException;
 import mungmo.board.com.util.Upload;
 import mungmo.board.domain.board.external.BoardDto;
-import mungmo.board.domain.board.external.DogBoardDto;
 import mungmo.board.domain.board.external.PageDto;
 import mungmo.board.domain.board.entity.BoardEntity;
-import mungmo.board.domain.board.repository.BoardRepository;
+import mungmo.board.domain.board.infra.BoardRepository;
+import mungmo.board.domain.board.infra.repository.SpringDataJpaBoardRepository;
 import mungmo.board.response.member.entity.MemberEntity;
-import mungmo.board.response.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,7 +18,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 

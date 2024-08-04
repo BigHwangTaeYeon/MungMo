@@ -6,7 +6,8 @@ import mungmo.admin.admin.domain.notification.external.Notification;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import mungmo.admin.admin.domain.notification.domain.ChatNotification;
-import mungmo.admin.admin.domain.notification.repository.ChatNotificationRepository;
+import mungmo.admin.admin.domain.notification.infra.NotificationRepository;
+import mungmo.admin.admin.domain.notification.infra.repository.SpringDataJpaChatNotificationRepository;
 import mungmo.admin.admin.response.member.entity.MemberEntity;
 import mungmo.admin.admin.response.room.external.MeetupRoomParticipantDto;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatNotificationService {
-    private final ChatNotificationRepository chatNotificationRepository;
+    private final NotificationRepository notificationRepository;
+    private final SpringDataJpaChatNotificationRepository chatNotificationRepository;
 
     @Transactional
     public void saveNotification(MemberEntity recipientId, MeetupRoomParticipantDto participant, Notification notification) {
@@ -45,7 +47,7 @@ public class ChatNotificationService {
 
     @Transactional
     public void changeStatusReadTrue(Long userId, Long roomNum) {
-        chatNotificationRepository.findByRecipientIdAndChatRoomId(userId, roomNum)
+        notificationRepository.findByRecipientIdAndChatRoomId(userId, roomNum)
                 .forEach(ChatNotification::changeStatusReadTrue);
     }
 }

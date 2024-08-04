@@ -3,13 +3,12 @@ package mungmo.chat.domain.room.service;
 import lombok.RequiredArgsConstructor;
 import mungmo.chat.domain.room.entity.MeetupRoomParticipant;
 import mungmo.chat.domain.room.external.MeetupRoomParticipantDto;
-import mungmo.chat.domain.room.repository.MeetupRoomParticipantRepository;
+import mungmo.chat.domain.room.infra.MeetupRoomParticipantRepository;
+import mungmo.chat.domain.room.infra.repository.SpringDataJpaMeetupRoomParticipantRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

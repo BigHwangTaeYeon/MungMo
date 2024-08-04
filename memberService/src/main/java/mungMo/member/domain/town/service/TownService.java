@@ -2,9 +2,9 @@ package mungMo.member.domain.town.service;
 
 import lombok.RequiredArgsConstructor;
 import mungMo.member.domain.member.entity.MemberEntity;
-import mungMo.member.domain.member.service.MemberService;
 import mungMo.member.domain.town.entity.TownEntity;
-import mungMo.member.domain.town.repository.TownRepository;
+import mungMo.member.domain.town.infra.TownRepository;
+import mungMo.member.domain.town.infra.repository.SpringDataJpaTownRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

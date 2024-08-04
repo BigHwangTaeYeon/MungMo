@@ -13,21 +13,11 @@ public class ChatService {
     private final KafkaTemplate<String, Message> messageKafkaTemplate;
     private final KafkaTemplate<String, Notification> notificationKafkaTemplate;
 
-    @Value("${kafka.topic.message.meetup}")
-    private String meetupMessage;
-    @Value("${kafka.topic.message.subgroup}")
-    private String subgroupMessage;
-
-    @Value("${kafka.topic.notification.meetup}")
-    private String meetupNotification;
-    @Value("${kafka.topic.notification.subgroup}")
-    private String subgroupNotification;
-
-    public void meetupMessageSend(Message message) {
+    public void meetupMessageSend(String meetupMessage, Message message) {
         messageKafkaTemplate.send(meetupMessage, message);
     }
 
-    public void meetupNotification(Notification notification) {
+    public void meetupNotification(String meetupNotification, Notification notification) {
         notificationKafkaTemplate.send(meetupNotification, notification);
     }
 }

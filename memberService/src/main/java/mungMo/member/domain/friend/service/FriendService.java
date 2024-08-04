@@ -2,7 +2,8 @@ package mungMo.member.domain.friend.service;
 
 import lombok.RequiredArgsConstructor;
 import mungMo.member.domain.friend.entity.FriendEntity;
-import mungMo.member.domain.friend.repository.FriendRepository;
+import mungMo.member.domain.friend.infra.FriendRepository;
+import mungMo.member.domain.friend.infra.repository.SpringDataJpaFriendRepository;
 import mungMo.member.domain.member.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

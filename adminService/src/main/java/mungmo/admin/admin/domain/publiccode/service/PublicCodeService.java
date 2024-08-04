@@ -3,7 +3,7 @@ package mungmo.admin.admin.domain.publiccode.service;
 import lombok.RequiredArgsConstructor;
 import mungmo.admin.admin.domain.publiccode.domain.PublicCodeEntity;
 import mungmo.admin.admin.domain.publiccode.domain.PublicType;
-import mungmo.admin.admin.domain.publiccode.repository.PublicCodeRepository;
+import mungmo.admin.admin.domain.publiccode.infra.PublicCodeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

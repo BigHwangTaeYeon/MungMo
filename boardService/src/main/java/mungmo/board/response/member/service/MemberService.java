@@ -2,7 +2,7 @@ package mungmo.board.response.member.service;
 
 import lombok.RequiredArgsConstructor;
 import mungmo.board.response.member.entity.MemberEntity;
-import mungmo.board.response.member.repository.MemberRepository;
+import mungmo.board.response.member.infra.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service

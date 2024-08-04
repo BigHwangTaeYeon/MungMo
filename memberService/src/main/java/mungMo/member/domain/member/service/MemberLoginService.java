@@ -2,8 +2,9 @@ package mungMo.member.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import mungMo.member.domain.member.entity.MemberEntity;
+import mungMo.member.domain.member.infra.MemberRepository;
 import mungMo.member.domain.member.oauth.response.OAuthInfoResponse;
-import mungMo.member.domain.member.repository.MemberRepository;
+import mungMo.member.domain.member.infra.repository.SpringDataJpaMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

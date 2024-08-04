@@ -1,0 +1,4 @@
+rootProject.name = 'mungmo'
+include 'adminService'
+//include 'memberService'
+//include 'boardService'

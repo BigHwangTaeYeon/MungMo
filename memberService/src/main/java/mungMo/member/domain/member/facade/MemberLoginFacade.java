@@ -1,7 +1,6 @@
 package mungMo.member.domain.member.facade;
 
 import lombok.RequiredArgsConstructor;
-import mungMo.member.com.exception.ValidationException;
 import mungMo.member.domain.member.entity.MemberEntity;
 import mungMo.member.domain.member.oauth.client.RequestOAuthInfoService;
 import mungMo.member.domain.member.oauth.jwt.AuthTokens;
@@ -13,7 +12,7 @@ import mungMo.member.domain.member.service.MemberTypeService;
 import mungMo.member.domain.town.service.TownService;
 import mungMo.member.response.publiccode.entity.PublicCodeEntity;
 import mungMo.member.response.publiccode.entity.PublicType;
-import mungMo.member.response.publiccode.repository.PublicCodeRepository;
+import mungMo.member.response.publiccode.service.PublicCodeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +26,11 @@ import static mungMo.member.response.publiccode.entity.PublicType.MBTP;
 @RequiredArgsConstructor
 public class MemberLoginFacade {
     private final MemberLoginService memberLoginService;
-
-    private final PublicCodeRepository publicCodeRepository;
-    private final AuthTokensGenerator authTokensGenerator;
-    private final RequestOAuthInfoService requestOAuthInfoService;
+    private final PublicCodeService publicCodeService;
     private final TownService townService;
     private final MemberTypeService memberTypeService;
+    private final RequestOAuthInfoService requestOAuthInfoService;
+    private final AuthTokensGenerator authTokensGenerator;
 
     @Transactional
     public AuthTokens login(OAuthLoginParams params) {
@@ -55,8 +53,8 @@ public class MemberLoginFacade {
         MemberEntity member = memberLoginService.newMember(oAuthInfoResponse);
         townService.saveMemberEntity(member);
 
-        List<PublicCodeEntity> publicMBTPEntity = publicCodeRepository.findByCodeTypeAndUseYN(PublicType.str(MBTP), true);
-        List<PublicCodeEntity> publicDGTPEntity = publicCodeRepository.findByCodeTypeAndUseYN(PublicType.str(DGTP), true);
+        List<PublicCodeEntity> publicMBTPEntity = publicCodeService.findByCodeTypeAndUseYN(PublicType.str(MBTP), true);
+        List<PublicCodeEntity> publicDGTPEntity = publicCodeService.findByCodeTypeAndUseYN(PublicType.str(DGTP), true);
         memberTypeService.save(publicMBTPEntity, member);
         memberTypeService.save(publicDGTPEntity, member);
 

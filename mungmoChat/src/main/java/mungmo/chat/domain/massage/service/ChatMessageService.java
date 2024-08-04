@@ -3,7 +3,8 @@ package mungmo.chat.domain.massage.service;
 import lombok.RequiredArgsConstructor;
 import mungmo.chat.domain.massage.domain.ChatMessage;
 import mungmo.chat.domain.massage.external.Message;
-import mungmo.chat.domain.massage.repository.ChatMessageRepository;
+import mungmo.chat.domain.massage.infra.ChatMessageRepository;
+import mungmo.chat.domain.massage.infra.repository.SpringDataJpaChatMessageRepository;
 import org.springframework.stereotype.Service;
 
 @Service

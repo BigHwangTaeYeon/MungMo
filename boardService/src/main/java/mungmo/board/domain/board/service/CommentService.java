@@ -3,7 +3,8 @@ package mungmo.board.domain.board.service;
 import lombok.RequiredArgsConstructor;
 import mungmo.board.domain.board.entity.BoardEntity;
 import mungmo.board.domain.board.entity.CommentEntity;
-import mungmo.board.domain.board.repository.CommentRepository;
+import mungmo.board.domain.board.infra.CommentRepository;
+import mungmo.board.domain.board.infra.repository.SpringDataJpaCommentRepository;
 import mungmo.board.response.member.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 

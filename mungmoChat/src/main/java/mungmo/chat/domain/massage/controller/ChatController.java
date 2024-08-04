@@ -3,7 +3,7 @@ package mungmo.chat.domain.massage.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mungmo.chat.domain.massage.external.Message;
-import mungmo.chat.domain.massage.service.ChatService;
+import mungmo.chat.domain.massage.facade.ChatFacade;
 import mungmo.chat.response.notification.external.Notification;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final ChatService chatService;
+    private final ChatFacade chatFacade;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping(value = "/meetup")
     public void meetup(@RequestBody Message message){
-        chatService.meetupMessageSend(message);
-        chatService.meetupNotification(Notification.from(message));
+        chatFacade.meetupMessageSend(message);
+        chatFacade.meetupNotification(Notification.from(message));
         simpMessagingTemplate.convertAndSend("/sub/meetup/" + message.getChatRoomId(), message);
     }
 }
