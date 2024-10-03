@@ -12,15 +12,15 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileInfo {
-    private String original_name;
-    private String mask_name;
-    private String file_path;
-    private String file_type;
+    private String originalName;
+    private String maskName;
+    private String filePath;
+    private String fileType;
 
     public FileInfo(Map<String, String> uploadFileInfo, String file_type) {
-        this.original_name = uploadFileInfo.get("original");
-        this.mask_name = uploadFileInfo.get("masking");
-        this.file_path = uploadFileInfo.get("path");
-        this.file_type = file_type;
+        this.originalName = uploadFileInfo.get("original");
+        this.maskName = uploadFileInfo.get("masking");
+        this.filePath = uploadFileInfo.get("path");
+        this.fileType = file_type;
     }
 }

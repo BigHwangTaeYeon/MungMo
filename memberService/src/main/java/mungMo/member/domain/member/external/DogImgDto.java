@@ -6,8 +6,8 @@ import lombok.Setter;
 
 @Getter @Setter @Builder
 public class DogImgDto {
-    private String original_name;
-    private String mask_name;
-    private String file_path;
-    private String file_type;
+    private String originalName;
+    private String maskName;
+    private String filePath;
+    private String fileType;
 }

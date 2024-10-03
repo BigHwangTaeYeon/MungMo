@@ -1,15 +1,17 @@
-package mungmo.admin.admin.domain.notification.external;
+package mungmo.admin.admin.domain.notification.extra;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notification implements Serializable {
+public class ChatNotificationDto {
     private Long chatRoomId;
     private Long recipientId;
     private Long sendId;

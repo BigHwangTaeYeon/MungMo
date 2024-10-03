@@ -1,9 +1,11 @@
 package mungmo.admin.admin.domain.notification.infra;
 
-import mungmo.admin.admin.domain.notification.domain.ChatNotification;
+import mungmo.admin.admin.domain.notification.vo.ChatNotificationVo;
 
 import java.util.List;
 
 public interface NotificationRepository {
-    List<ChatNotification> findByRecipientIdAndChatRoomId(Long userId, Long roomNum);
+    List<ChatNotificationVo> findByRecipientIdAndChatRoomId(Long userId, Long roomNum);
+
+    void save(ChatNotificationVo of);
 }

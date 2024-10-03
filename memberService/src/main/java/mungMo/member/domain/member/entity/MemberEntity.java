@@ -40,6 +40,7 @@ public class MemberEntity {
 
     @Column(nullable = false)
     private String gender;
+
     @Column(name = "age_range", nullable = false)
     private String ageRange;
 
@@ -121,10 +122,10 @@ public class MemberEntity {
 
     public DogImgDto dogImgDTO() {
         return DogImgDto.builder()
-                .file_path(fileInfo.getFile_path())
-                .original_name(fileInfo.getOriginal_name())
-                .mask_name(fileInfo.getMask_name())
-                .file_type(fileInfo.getFile_type())
+                .filePath(fileInfo.getFilePath())
+                .originalName(fileInfo.getOriginalName())
+                .maskName(fileInfo.getMaskName())
+                .fileType(fileInfo.getFileType())
                 .build();
     }
 

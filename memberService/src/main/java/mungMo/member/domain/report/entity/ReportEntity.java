@@ -49,7 +49,7 @@ public class ReportEntity {
         toMemberId = dto.getToId();
         status = false;
         create_date = LocalDateTime.now();
-        if(StringUtils.hasText(dto.getFile_path())) fileInfo = new FileInfo(dto.getOriginal_name(), dto.getMask_name(), dto.getFile_path(), dto.getFile_type());
+        if(StringUtils.hasText(dto.getFilePath())) fileInfo = new FileInfo(dto.getOriginalName(), dto.getMaskName(), dto.getFilePath(), dto.getFileType());
     }
 
     public ReportDto toDto() {
@@ -62,10 +62,10 @@ public class ReportEntity {
                     .toId(toMemberId)
                     .status(status ? ReportDto.useStatus.DID : ReportDto.useStatus.DIDNOT)
                     .createDate(create_date)
-                    .file_path(fileInfo.getFile_path())
-                    .original_name(fileInfo.getOriginal_name())
-                    .mask_name(fileInfo.getMask_name())
-                    .file_type(fileInfo.getFile_type())
+                    .filePath(fileInfo.getFilePath())
+                    .originalName(fileInfo.getOriginalName())
+                    .maskName(fileInfo.getMaskName())
+                    .fileType(fileInfo.getFileType())
                     .build();
         } else {
             return ReportDto.builder()

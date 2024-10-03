@@ -326,7 +326,10 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning
 
 bin/kafka-topics.sh --describe --bootstrap-server localhost:9092 --topic oauth_login_history
 
-bin/kafka-topics.sh --create --topic maxwell_test --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+bin/kafka-topics.sh --create --topic chat_meetup_message --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+bin/kafka-topics.sh --create --topic chat_subgroup_message --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+bin/kafka-topics.sh --create --topic chat_meetup_notification --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+bin/kafka-topics.sh --create --topic chat_subgroup_notification --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
 
 bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3 --topic chat_massage
 bin/kafka-topics.sh --create --topic chat_notification --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3

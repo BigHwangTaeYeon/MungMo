@@ -3,12 +3,13 @@ package mungmo.admin.admin.domain.notification.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import mungmo.admin.admin.domain.notification.external.Notification;
+import lombok.Setter;
+import mungmo.admin.admin.domain.notification.vo.ChatNotificationVo;
 import mungmo.admin.admin.response.member.entity.MemberEntity;
 import mungmo.admin.admin.response.room.external.MeetupRoomParticipantDto;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class ChatNotification {
 
@@ -34,11 +35,7 @@ public class ChatNotification {
     @Column(name = "has_read", nullable = false)
     private Boolean hasRead;
 
-    public void changeStatusReadTrue() {
-        this.hasRead = true;
-    }
-
-    private ChatNotification(MemberEntity sender, MeetupRoomParticipantDto participantDTO, Notification notification) {
+    private ChatNotification(MemberEntity sender, MeetupRoomParticipantDto participantDTO, ChatNotificationVo notification) {
         this.sender = sender;
         this.recipientId = participantDTO.getMemberId();
         this.chatRoomId = participantDTO.getChatRoomId();
@@ -46,7 +43,19 @@ public class ChatNotification {
         this.hasRead = false;
     }
 
-    public static ChatNotification of(MemberEntity sender, MeetupRoomParticipantDto participantDTO, Notification notification) {
+    public static ChatNotification of(MemberEntity sender, MeetupRoomParticipantDto participantDTO, ChatNotificationVo notification) {
         return new ChatNotification(sender, participantDTO, notification);
+    }
+
+    public ChatNotificationVo toVo() {
+        return ChatNotificationVo.builder()
+                .chatNotificationId(id)
+                .chatRoomId(chatRoomId)
+                .recipientId(recipientId)
+                .sendId(sender.getId())
+                .senderNick(sender.getDogName())
+                .content(content)
+                .hasRead(hasRead)
+                .build();
     }
 }

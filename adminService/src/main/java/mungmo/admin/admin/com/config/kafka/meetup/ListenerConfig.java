@@ -1,7 +1,7 @@
 package mungmo.admin.admin.com.config.kafka.meetup;
 
 import com.google.common.collect.ImmutableMap;
-import mungmo.admin.admin.domain.notification.external.Notification;
+import mungmo.admin.admin.domain.notification.vo.ChatNotificationVo;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +26,8 @@ public class ListenerConfig {
     private String kafkaConsumerGroupId;
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, Notification> kafkaNotificationContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Notification> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, ChatNotificationVo> kafkaNotificationContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChatNotificationVo> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(kafkaNotificationConsumer());
         factory.setConcurrency(3); // 컨슈머 수를 2로 설정
@@ -35,9 +35,9 @@ public class ListenerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, Notification> kafkaNotificationConsumer() {
+    public ConsumerFactory<String, ChatNotificationVo> kafkaNotificationConsumer() {
 
-        JsonDeserializer<Notification> deserializer = new JsonDeserializer<>();
+        JsonDeserializer<ChatNotificationVo> deserializer = new JsonDeserializer<>();
 
         deserializer.addTrustedPackages("*");
 

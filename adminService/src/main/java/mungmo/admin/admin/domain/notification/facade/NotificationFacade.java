@@ -1,7 +1,7 @@
 package mungmo.admin.admin.domain.notification.facade;
 
 import lombok.RequiredArgsConstructor;
-import mungmo.admin.admin.domain.notification.external.Notification;
+import mungmo.admin.admin.domain.notification.vo.ChatNotificationVo;
 import mungmo.admin.admin.domain.notification.service.ChatNotificationService;
 import mungmo.admin.admin.response.member.entity.MemberEntity;
 import mungmo.admin.admin.response.member.service.MemberService;
@@ -22,7 +22,7 @@ public class NotificationFacade {
     private final MeetupRoomParticipantService meetupRoomParticipantService;
 
     @Transactional
-    public void saveNotification(Notification notification) {
+    public void saveNotification(ChatNotificationVo notification) {
         // 보내는 사람
         MemberEntity recipientId = memberService.findMemberById(notification.getSendId());
         // 채팅 참여중이지 않은 사람
@@ -37,7 +37,7 @@ public class NotificationFacade {
     }
 
     @Transactional(readOnly = true)
-    public void sendPushNotification(Notification notification) {
+    public void sendPushNotification(ChatNotificationVo notification) {
         // 채팅 참여중이지 않은 사람
         List<MeetupRoomParticipantDto> participants = meetupRoomParticipantService.chatNonParticipantsByFeignClient(notification.getChatRoomId())
                 .stream()

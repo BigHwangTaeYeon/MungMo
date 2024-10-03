@@ -25,3 +25,15 @@ open /opt/homebrew/bin/jmeter
 카프카를 사용한다는 오버헤드로 인해 처리 속도가 조금 더 낮다는 결론이 났다.
 다른 사람들은 왜 그런 글을 올렸을까.. 도저히 이해가 되지않아 알아보니, 이력서용으로 자작극을 한 것이였다.
 그렇다면 채팅서비스를 구현하는데 카프카가 필요한 이유는 비동기 분산처리로 유용한 것 보다 디커플링인 것으로 현재는 결론을 지었다.
+
+
+ws://localhost:9091/chat-service/stomp/chat
+/sub/meetup
+/pub/meetup
+
+{
+"chatRoomId" : 2,
+"senderId" : 3,
+"content" : "content blah",
+"readCount" : 2
+}

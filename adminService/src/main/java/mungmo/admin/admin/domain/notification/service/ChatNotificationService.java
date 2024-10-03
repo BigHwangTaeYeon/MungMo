@@ -2,7 +2,8 @@ package mungmo.admin.admin.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mungmo.admin.admin.domain.notification.external.Notification;
+import mungmo.admin.admin.domain.notification.infra.adapter.NotificationAdapter;
+import mungmo.admin.admin.domain.notification.vo.ChatNotificationVo;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import mungmo.admin.admin.domain.notification.domain.ChatNotification;
@@ -24,11 +25,12 @@ public class ChatNotificationService {
     private final SpringDataJpaChatNotificationRepository chatNotificationRepository;
 
     @Transactional
-    public void saveNotification(MemberEntity recipientId, MeetupRoomParticipantDto participant, Notification notification) {
-        chatNotificationRepository.save(ChatNotification.of(recipientId, participant, notification));
+    public void saveNotification(MemberEntity sender, MeetupRoomParticipantDto participant, ChatNotificationVo notification) {
+//        notificationRepository.save(ChatNotification.of(sender, participant, notification));
+        notificationRepository.save(ChatNotificationVo.of(sender, participant, notification));
     }
 
-    public void sendPushNotification(Notification notification, List<MemberEntity> notInChatMemberList) {
+    public void sendPushNotification(ChatNotificationVo notification, List<MemberEntity> notInChatMemberList) {
         for(MemberEntity entity : notInChatMemberList) {
             try {
                 if(StringUtils.hasText(entity.getFcmToken().getFcmToken())) {
@@ -48,6 +50,6 @@ public class ChatNotificationService {
     @Transactional
     public void changeStatusReadTrue(Long userId, Long roomNum) {
         notificationRepository.findByRecipientIdAndChatRoomId(userId, roomNum)
-                .forEach(ChatNotification::changeStatusReadTrue);
+                .forEach(ChatNotificationVo::changeStatusReadTrue);
     }
 }

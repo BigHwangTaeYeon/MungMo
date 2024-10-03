@@ -49,28 +49,27 @@ public class StompHandler implements ChannelInterceptor {
             case CONNECT:
                 System.out.println("CONNECT");
                 function = new ParticipantFunction(memberService, meetupRoomService, participantFacade);
-                handleConnect(accessor);
+//                handleConnect(accessor);
                 break;
             case SUBSCRIBE:
                 System.out.println("SUBSCRIBE");
-                handleSubscribe(accessor);
+//                handleSubscribe(accessor);
                 break;
             case SEND:
                 System.out.println("SEND");
-                handleSend(accessor);
+//                handleSend(accessor);
                 break;
             case DISCONNECT:
                 System.out.println("DISCONNECT");
                 function = new ParticipantFunction(memberService, meetupRoomService, participantFacade);
-                handleDisconnect(accessor);
+//                handleDisconnect(accessor);
                 break;
             case ERROR:
                 System.out.println("WebSocket Error 처리 코드!!");
-                handleUnsubscribe(accessor);
+//                handleUnsubscribe(accessor);
                 break;
         }
     }
-
 
     private void handleConnect(StompHeaderAccessor accessor) throws NotFoundException {
         // 모임에 참여자 존재 여부 확인
